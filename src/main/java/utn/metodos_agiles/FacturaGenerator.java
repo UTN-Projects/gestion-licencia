@@ -19,8 +19,7 @@ import java.util.List;
 
 import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_BOLD;
 import static org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA_OBLIQUE;
-import static org.vandeseer.easytable.settings.HorizontalAlignment.LEFT;
-import static org.vandeseer.easytable.settings.HorizontalAlignment.RIGHT;
+import static org.vandeseer.easytable.settings.HorizontalAlignment.*;
 
 public class FacturaGenerator {
 
@@ -84,6 +83,7 @@ public class FacturaGenerator {
                         .build())
                 .add(TextCell.builder().text("B").fontSize(30)
                         .font(new PDType1Font(HELVETICA_BOLD))
+                        .horizontalAlignment(CENTER)
                         .borderColorLeft(Color.WHITE)
                         .build())
                 .add(TextCell.builder().text("FACTURA")
