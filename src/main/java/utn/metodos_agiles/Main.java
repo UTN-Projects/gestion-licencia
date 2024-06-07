@@ -1,6 +1,7 @@
 package utn.metodos_agiles;
 
 import java.util.Date;
+import utn.metodos_agiles.dbmanager.DBManager;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,6 +10,8 @@ public class Main {
         for (int i = 1; i <= 5; i++) {
             System.out.println("i = " + i);
         }
+        
+        DBManager.probarDB();
     }
     
     private static Date calcularVigencia(int edad, int nroLicTit) {
