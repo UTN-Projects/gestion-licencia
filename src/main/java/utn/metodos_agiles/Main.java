@@ -2,16 +2,15 @@ package utn.metodos_agiles;
 
 import java.util.Date;
 import utn.metodos_agiles.dbmanager.DBManager;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.printf("Hello and welcome!");
-
-        for (int i = 1; i <= 5; i++) {
-            System.out.println("i = " + i);
-        }
-        
-        DBManager.probarDB();
+      
+    	
+    	MenuPrincipal interfaz= new MenuPrincipal();
+    	interfaz.setVisible(true);
+    	
     }
     
     private static Date calcularVigencia(int edad, int nroLicTit) {
@@ -50,5 +49,6 @@ public class Main {
     		mas = 1;
     	}
     	return new Date().getYear() + mas;
+
     }
 }
