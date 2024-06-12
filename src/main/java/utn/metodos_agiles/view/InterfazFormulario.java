@@ -21,12 +21,14 @@ import java.awt.event.MouseEvent;
 public class InterfazFormulario extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
+
+    private static final String ESCUDO_ARG_PATH = "/imagenes/Escudo_Argentina.png";
+    private JPanel contentPane;
 	private JTextField txtDni;
 	private JTable table;
 
 	public InterfazFormulario() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazFormulario.class.getResource("/imagenes/Escudo_Argentina.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazFormulario.class.getResource(ESCUDO_ARG_PATH)));
 		setResizable(false);
 		setTitle("Emitir licencia");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -22,12 +22,15 @@ import java.awt.Toolkit;
 public class MenuPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	private static final String ESCUDO_ARG_PATH = "src/main/resources/imagenes/Escudo_Argentina.png";
+	private static final String PUENTE_COLGANTE_PATH = "src/main/resources/imagenes/puente_colgante_desenfocado.png";
+
 	private JPanel contenidoMenu;
 	private InterfazFormulario interfazForms = null;
 		
 	public MenuPrincipal() {
 		setTitle("Sistema de licencias");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/imagenes/Escudo_Argentina.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ESCUDO_ARG_PATH));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 450);
@@ -65,7 +68,7 @@ public class MenuPrincipal extends JFrame {
 			 
 			 JLabel imagenPuente = new JLabel("");
 			 imagenPuente.setBorder(new LineBorder(new Color(69, 69, 69), 2, true));
-			 imagenPuente.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imagenes/puente colgante para el sistema desenfocado.png")));
+			 imagenPuente.setIcon(new ImageIcon(PUENTE_COLGANTE_PATH));
 			 imagenPuente.setBounds(10, 11, 559, 77);
 			 tabPrincipal.add(imagenPuente);
 		
