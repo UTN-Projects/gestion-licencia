@@ -1,12 +1,2 @@
 
 X	java:S125"<This block of commented-out lines of code should be removed.(·¶¢­8Ö—¿ä€2
-Q
-java:S18742"/Remove this use of "setYear"; it is deprecated.(¡¬“úÿÿÿÿ8×—¿ä€2
-Q
-java:S18742"/Remove this use of "getYear"; it is deprecated.(¡¬“úÿÿÿÿ8×—¿ä€2
-Q
-java:S1874E"/Remove this use of "getYear"; it is deprecated.(òÕ›ùÿÿÿÿ8Ø—¿ä€2
-R
-java:S1144""5Remove this unused private "calcularVigencia" method.(¦î‰8Ø—¿ä€2
-V
-java:S11446"9Remove this unused private "calcularAnioVigencia" method.(û·¶¬8Ø—¿ä€2

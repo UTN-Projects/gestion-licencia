@@ -22,3 +22,13 @@ c
 3src/main/java/utn/metodos_agiles/MenuPrincipal.java,6/5/6500b99bcebf771d60a1f127c79760893357df28
 h
 8src/main/java/utn/metodos_agiles/InterfazFormulario.java,7/0/709629bf64da937497bc7d67ecbff42edff021c7
+m
+=src/main/java/utn/metodos_agiles/view/InterfazFormulario.java,a/3/a38008f865ddad57a6161e078a73ae125fe137c3
+k
+;src/main/java/utn/metodos_agiles/util/FacturaGenerator.java,7/2/72357154a2f264eb404fc9b43fe9115f499a31ca
+l
+<src/main/java/utn/metodos_agiles/util/LicenciaGenerator.java,3/c/3c8f1d1af60f4988359ca39c7ef41c0815c5e095
+m
+=src/main/java/utn/metodos_agiles/util/VigenciaCalculator.java,7/2/725ad2e296a6a503643edbc01f7ed0b832e0064a
+h
+8src/main/java/utn/metodos_agiles/view/MenuPrincipal.java,9/a/9a63adf0108c49e318ba3abbccf70b9a9dafa485
