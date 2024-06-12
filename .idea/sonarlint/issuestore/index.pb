@@ -1,6 +1,4 @@
 
-Z
-*src/main/java/utn/metodos-agiles/Main.java,c/4/c46676e1c5d9bdfdd1b591102ce31c6f71552cb6
 7
 pom.xml,4/4/442292b8a7efeabbe4cc176709b833b1792140ec
 Z
@@ -16,3 +14,7 @@ Q.idea/sonarlint/securityhotspotstore/c/4/c46676e1c5d9bdfdd1b591102ce31c6f71552c
 :
 
 .gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
+g
+7src/main/java/utn/metodos_agiles/LicenciaGenerator.java,8/d/8d4566add3aaca721271c731bcdfa304afd3efc5
+f
+6src/main/java/utn/metodos_agiles/FacturaGenerator.java,6/3/63e51b61a4c4d9e0cbea271584e4b5283bfe48ca

@@ -1,0 +1,19 @@
+
+g	java:S112E"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8ÈýŒ®ü1
+l	java:S117J"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(À‹­W8ÊýŒ®ü1
+n
+java:S1104³"PMake name a static final constant or non-public and provide accessors if needed.( þÍ¾8ÊýŒ®ü1
+v
+java:S1104´"SMake address a static final constant or non-public and provide accessors if needed.(€ªµúÿÿÿÿÿ8ÊýŒ®ü1
+m
+java:S1104µ"OMake dni a static final constant or non-public and provide accessors if needed.(›¤›Þ8ÊýŒ®ü1
+z
+java:S1104¹"WMake description a static final constant or non-public and provide accessors if needed.(¹ÿ†ðÿÿÿÿÿ8ÊýŒ®ü1
+t
+java:S1104º"QMake value a static final constant or non-public and provide accessors if needed.(½å‹¢ûÿÿÿÿ8ÊýŒ®ü1
+g
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(†×Éþùÿÿÿÿ8ãýŒ®ü1
+g
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(ç”Öþûÿÿÿÿ8ãýŒ®ü1
+b
+java:S1124"EReorder the modifiers to comply with the Java Language Specification.(ÜŠ­Ð8ãýŒ®ü1
