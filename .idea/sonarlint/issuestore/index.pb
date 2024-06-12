@@ -18,3 +18,7 @@ g
 7src/main/java/utn/metodos_agiles/LicenciaGenerator.java,8/d/8d4566add3aaca721271c731bcdfa304afd3efc5
 f
 6src/main/java/utn/metodos_agiles/FacturaGenerator.java,6/3/63e51b61a4c4d9e0cbea271584e4b5283bfe48ca
+c
+3src/main/java/utn/metodos_agiles/MenuPrincipal.java,6/5/6500b99bcebf771d60a1f127c79760893357df28
+h
+8src/main/java/utn/metodos_agiles/InterfazFormulario.java,7/0/709629bf64da937497bc7d67ecbff42edff021c7
