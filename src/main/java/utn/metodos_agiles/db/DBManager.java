@@ -1,4 +1,4 @@
-package utn.metodos_agiles.dbmanager;
+package utn.metodos_agiles.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

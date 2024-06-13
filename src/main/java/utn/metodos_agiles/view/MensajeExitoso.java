@@ -1,4 +1,4 @@
-package utn.metodos_agiles;
+package utn.metodos_agiles.view;
 
 import java.awt.EventQueue;
 
