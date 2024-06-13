@@ -18,6 +18,11 @@ import java.awt.event.WindowEvent;
 import javax.swing.border.LineBorder;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
+import java.awt.Point;
+import java.awt.Rectangle;
+import javax.swing.JTextField;
+import javax.swing.JSeparator;
+import javax.swing.JPasswordField;
 
 public class MenuPrincipal extends JFrame {
 
@@ -27,13 +32,15 @@ public class MenuPrincipal extends JFrame {
 
 	private JPanel contenidoMenu;
 	private InterfazFormulario interfazForms = null;
+	private JTextField fieldUsuario;
+	private JPasswordField fieldContra;
 		
 	public MenuPrincipal() {
 		setTitle("Sistema de licencias");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ESCUDO_ARG_PATH));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 450);
+		setBounds(700, 300, 600, 450);
 		contenidoMenu = new JPanel();
 		contenidoMenu.setBackground(new Color(69, 69, 69));
 		contenidoMenu.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -47,35 +54,133 @@ public class MenuPrincipal extends JFrame {
 		panelGeneral.setBounds(0, 0, 584, 411);
 		contenidoMenu.add(panelGeneral);
 		
-		JPanel tabPrincipal = new JPanel();
-		tabPrincipal.setBackground(new Color(251, 203, 60));
-		panelGeneral.addTab("Menu Principal", null, tabPrincipal, null);
-		tabPrincipal.setLayout(null);
+		JPanel tabLogin = new JPanel();
+		tabLogin.setToolTipText("");
+		panelGeneral.addTab("Login", null, tabLogin, null);
+		tabLogin.setLayout(null);
+		
+		JPanel panelDatosLogin = new JPanel();
+		panelDatosLogin.setBorder(new LineBorder(new Color(69, 69, 69), 1, true));
+		panelDatosLogin.setBackground(new Color(251, 203, 60));
+		panelDatosLogin.setBounds(0, 0, 313, 383);
+		tabLogin.add(panelDatosLogin);
+		panelDatosLogin.setLayout(null);
+		
+		JLabel txtUsuario = new JLabel("Usuario");
+		txtUsuario.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		txtUsuario.setForeground(new Color(69, 69, 69));
+		txtUsuario.setBounds(20, 168, 239, 26);
+		panelDatosLogin.add(txtUsuario);
+		
+		fieldUsuario = new JTextField();
+		fieldUsuario.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		fieldUsuario.setBorder(null);
+		fieldUsuario.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+		fieldUsuario.setForeground(new Color(69, 69, 69));
+		fieldUsuario.setBackground(new Color(251, 203, 60));
+		fieldUsuario.setBounds(20, 193, 269, 26);
+		panelDatosLogin.add(fieldUsuario);
+		fieldUsuario.setColumns(10);
+		
+		JSeparator separatorUsuario = new JSeparator();
+		separatorUsuario.setForeground(new Color(45, 45, 45));
+		separatorUsuario.setBackground(new Color(69, 69, 69));
+		separatorUsuario.setBounds(20, 219, 269, 20);
+		panelDatosLogin.add(separatorUsuario);
+		
+		JLabel txtContrasenia = new JLabel("Contraseña");
+		txtContrasenia.setForeground(new Color(69, 69, 69));
+		txtContrasenia.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		txtContrasenia.setBounds(20, 250, 239, 26);
+		panelDatosLogin.add(txtContrasenia);
+		
+		JSeparator separatorContra = new JSeparator();
+		separatorContra.setForeground(new Color(69, 69, 69));
+		separatorContra.setBackground(new Color(69, 69, 69));
+		separatorContra.setBounds(20, 302, 269, 20);
+		panelDatosLogin.add(separatorContra);
+		
+		fieldContra = new JPasswordField();
+		fieldContra.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		fieldContra.setForeground(new Color(45, 45, 45));
+		fieldContra.setBorder(null);
+		fieldContra.setBackground(new Color(251, 203, 60));
+		fieldContra.setBounds(20, 277, 269, 26);
+		panelDatosLogin.add(fieldContra);
+		
+		JLabel utnImagen = new JLabel("");
+		utnImagen.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imagenes/png utn escalado.png")));
+		utnImagen.setBounds(10, 11, 90, 94);
+		panelDatosLogin.add(utnImagen);
+		
+		JLabel metodosTxt = new JLabel("METODOS");
+		metodosTxt.setForeground(new Color(69, 69, 69));
+		metodosTxt.setFont(new Font("Arial Black", Font.PLAIN, 30));
+		metodosTxt.setBounds(110, 11, 192, 39);
+		panelDatosLogin.add(metodosTxt);
+		
+		JLabel agilesTxt = new JLabel("AGILES");
+		agilesTxt.setForeground(new Color(69, 69, 69));
+		agilesTxt.setVerticalAlignment(SwingConstants.BOTTOM);
+		agilesTxt.setFont(new Font("Arial Black", Font.PLAIN, 30));
+		agilesTxt.setBounds(110, 46, 192, 39);
+		panelDatosLogin.add(agilesTxt);
+		
+		JPanel btnIngresar = new JPanel();
+		btnIngresar.setBackground(new Color(69, 69, 69));
+		btnIngresar.setBounds(83, 333, 136, 26);
+		panelDatosLogin.add(btnIngresar);
+		btnIngresar.setLayout(null);
+		
+		JLabel txtBtnIngresar = new JLabel("Ingresar");
+		txtBtnIngresar.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		txtBtnIngresar.setHorizontalAlignment(SwingConstants.CENTER);
+		txtBtnIngresar.setForeground(new Color(255, 255, 255));
+		txtBtnIngresar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		txtBtnIngresar.setBounds(0, 0, 136, 26);
+		btnIngresar.add(txtBtnIngresar);
+		
+		JLabel loginTxt = new JLabel("Ingrese un usuario:");
+		loginTxt.setVerticalAlignment(SwingConstants.BOTTOM);
+		loginTxt.setForeground(new Color(69, 69, 69));
+		loginTxt.setFont(new Font("Arial Black", Font.PLAIN, 17));
+		loginTxt.setBounds(20, 118, 192, 39);
+		panelDatosLogin.add(loginTxt);
+		
+		JLabel imagenLogin = new JLabel("");
+		imagenLogin.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imagenes/imagen para el login.png")));
+		imagenLogin.setBounds(311, 0, 268, 383);
+		tabLogin.add(imagenLogin);
+		
+		JPanel tabMenuPrincipal = new JPanel();
+		tabMenuPrincipal.setBackground(new Color(251, 203, 60));
+		panelGeneral.addTab("Menu Principal", null, tabMenuPrincipal, null);
+		tabMenuPrincipal.setLayout(null);
 			 
 			 JLabel txtSF = new JLabel("SANTA FE");
 			 txtSF.setBackground(new Color(255, 255, 255));
 			 txtSF.setForeground(new Color(251, 203, 60));
 			 txtSF.setFont(new Font("Arial Black", Font.PLAIN, 37));
 			 txtSF.setBounds(157, 43, 219, 45);
-			 tabPrincipal.add(txtSF);
+			 tabMenuPrincipal.add(txtSF);
 			 
 			 JLabel txtCiudad = new JLabel("CIUDAD");
 			 txtCiudad.setForeground(new Color(255, 255, 255));
 			 txtCiudad.setFont(new Font("Arial Black", Font.PLAIN, 37));
 			 txtCiudad.setBackground(Color.WHITE);
 			 txtCiudad.setBounds(379, 43, 161, 45);
-			 tabPrincipal.add(txtCiudad);
+			 tabMenuPrincipal.add(txtCiudad);
 			 
 			 JLabel imagenPuente = new JLabel("");
 			 imagenPuente.setBorder(new LineBorder(new Color(69, 69, 69), 2, true));
 			 imagenPuente.setIcon(new ImageIcon(PUENTE_COLGANTE_PATH));
 			 imagenPuente.setBounds(10, 11, 559, 77);
-			 tabPrincipal.add(imagenPuente);
+			 tabMenuPrincipal.add(imagenPuente);
 		
 			 JPanel funcionalidades = new JPanel();
 			 funcionalidades.setBackground(new Color(251, 203, 60));
 			 funcionalidades.setBounds(10, 99, 559, 132);
-			 tabPrincipal.add(funcionalidades);
+			 tabMenuPrincipal.add(funcionalidades);
 			 funcionalidades.setBorder(new TitledBorder(new LineBorder(new Color(69, 69, 69), 2, true), "Funcionalidades del Sistema", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(69, 69, 69)));
 			 funcionalidades.setLayout(null);
 			 
