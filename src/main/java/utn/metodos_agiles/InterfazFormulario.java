@@ -18,6 +18,11 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
+
+import entidades.Licencia;
+import entidades.Titular;
+import utn.metodos_agiles.dbmanager.DBManager;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -31,20 +36,33 @@ import javax.swing.SwingConstants;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
+
 
 public class InterfazFormulario extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtDni;
-	private JTable table;
+	private JTable tablaDatos;
+	private JComboBox<String> comboBoxClase;
+	private JTextField textoObs;
+	private Titular titular;
+	private Licencia licencia;
+	private MensajeExitoso mensajeExitoso;
 
 	public InterfazFormulario() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazFormulario.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
 		setTitle("Emitir licencia");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 450);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(700, 300, 600, 450);
 		
 		
 		
@@ -102,16 +120,24 @@ public class InterfazFormulario extends JFrame {
         btnBuscar.setLayout(null);
         
         JLabel btnBuscarTxt = new JLabel("Buscar");
+        btnBuscarTxt.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		
+        		titular = buscarTitular();  
+                if (titular != null) {
+                    clasesDisponibles(titular);
+                }
+        		
+        		
+        	}
+        });
         btnBuscarTxt.setForeground(new Color(255, 255, 255));
         btnBuscarTxt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnBuscarTxt.setFont(new Font("Tahoma", Font.PLAIN, 16));
         btnBuscarTxt.setHorizontalAlignment(SwingConstants.CENTER);
         btnBuscarTxt.setBounds(0, 0, 130, 26);
         btnBuscar.add(btnBuscarTxt);
-        
-        table = new JTable();
-        table.setBounds(30, 183, 521, 51);
-        contentPane.add(table);
 		
         JPanel resultadoBusqueda = new JPanel();
         resultadoBusqueda.setBackground(new Color(251, 203, 60));
@@ -122,13 +148,29 @@ public class InterfazFormulario extends JFrame {
       
         contentPane.add(resultadoBusqueda);
         
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(20, 41, 519, 58);
+        resultadoBusqueda.add(scrollPane);
+        
+        tablaDatos = new JTable();
+        tablaDatos.setModel(new DefaultTableModel(
+        	new Object[][] {
+        		{"", null, null},
+        		{null, null, null},
+        	},
+        	new String[] {
+        		"DNI", "NOMBRE", "APELLIDO"
+        	}
+        ));
+        scrollPane.setViewportView(tablaDatos);
+        
         JLabel licenciaTxt = new JLabel("LICENCIA DISPONIBLES:");
-        licenciaTxt.setForeground(new Color(69, 69, 69));
+        licenciaTxt.setForeground(new Color(45, 45, 45));
         licenciaTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
         licenciaTxt.setBounds(20, 110, 175, 29);
         resultadoBusqueda.add(licenciaTxt);
         
-        JComboBox comboBoxClase = new JComboBox();
+        comboBoxClase = new JComboBox<>();
         comboBoxClase.setBounds(438, 115, 101, 22);
         resultadoBusqueda.add(comboBoxClase);
         
@@ -137,6 +179,18 @@ public class InterfazFormulario extends JFrame {
         claseTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
         claseTxt.setBounds(376, 110, 59, 29);
         resultadoBusqueda.add(claseTxt);
+        
+        JLabel txtObservaciones = new JLabel("OBSERVACIONES:");
+        txtObservaciones.setForeground(new Color(45, 45, 45));
+        txtObservaciones.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        txtObservaciones.setBounds(20, 163, 132, 26);
+        resultadoBusqueda.add(txtObservaciones);
+        
+        textoObs = new JTextField();
+        textoObs.setForeground(new Color(45, 45, 45));
+        textoObs.setBounds(242, 163, 297, 25);
+        resultadoBusqueda.add(textoObs);
+        textoObs.setColumns(10);
         
         JPanel btnCancelar = new JPanel();
         btnCancelar.setBackground(new Color(69, 69, 69));
@@ -149,7 +203,7 @@ public class InterfazFormulario extends JFrame {
         	@Override
         	public void mouseClicked(MouseEvent e) {
         		
-        		dispose();
+        		cerrarInterfaz();
         	}
         });
         btnCancelarTxt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -166,19 +220,129 @@ public class InterfazFormulario extends JFrame {
         contentPane.add(btnEmitir);
         
         JLabel btnEmitirTxt = new JLabel("Emitir");
+        btnEmitirTxt.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		
+        		licencia = emitirLicencia(titular);
+        		DBManager.cargarLicencia(licencia);
+        		abrirMensajeExitoso();
+        		
+        		
+        	}
+        });
+        btnEmitirTxt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnEmitirTxt.setHorizontalAlignment(SwingConstants.CENTER);
         btnEmitirTxt.setForeground(Color.WHITE);
         btnEmitirTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
         btnEmitirTxt.setBounds(0, 0, 96, 23);
         btnEmitir.add(btnEmitirTxt);
 		
+	
+		
+			}
+	
+	
+	private Titular buscarTitular() {
+		 
+		int dni = Integer.parseInt(txtDni.getText());
+		    Titular titular = DBManager.buscarPorDni(dni);
+		    if (titular != null) {
+		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
+		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
+		        model.addRow(new Object[]{titular.getDni(), titular.getNombre(), titular.getApellido()});
+		    } else {
+		        // Mostrar mensaje de que no se encontró el titular
+		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
+		        model.setRowCount(0); // Limpiar la tabla si no se encontró el titular
+		        model.addRow(new Object[]{"No encontrado", "", ""});
+		        return null;
+		    }
+	    return titular;
+	}
+	
+	
+	private void clasesDisponibles(Titular titular) {
+		
+		//metodo usado para verificar las condiciones de cada clase de licencia y listar las que cumpla el titular
+		comboBoxClase.removeAllItems();
+		 
+			int edad = titular.getEdad();
+		    Set<String> licenciasPoseidas = titular.getLicencias();
+		    
+		    
+		    if (edad >= 17) {
+		        comboBoxClase.addItem("A");
+		        comboBoxClase.addItem("B");
+		        comboBoxClase.addItem("F");
+		        comboBoxClase.addItem("G");
+		    }
+		    
+		    if (edad >= 21) {
+		        
+		    	if (edad >= 65) {
+		    		
+		    		if (licenciasPoseidas.contains("C") || licenciasPoseidas.contains("D") || licenciasPoseidas.contains("E")) {
+			            comboBoxClase.addItem("C");
+			            comboBoxClase.addItem("D");
+			            comboBoxClase.addItem("E");
+		    			}
+		    	}else {
+		    		if (licenciasPoseidas.contains("B") && titular.tiempoLicencias() >= 1) {
+		    			comboBoxClase.addItem("C");
+		    			comboBoxClase.addItem("D");
+		    			comboBoxClase.addItem("E");
+		        		}
+		    		}
+		    }
+	        
+	}
+	
+	
+	private Licencia emitirLicencia(Titular titular) {
+		
+		String claseSeleccionada = (String) comboBoxClase.getSelectedItem();
+	    
+	    
+	    String observaciones = textoObs.getText();
+	    
+	    LocalDate fechaEmisionLocal = LocalDate.now();
+	    Date fechaEmision = Date.valueOf(fechaEmisionLocal);
+	    
+	    Licencia nuevaLicencia = new Licencia(titular.getDni(), titular.getNombre(), 
+	    		titular.getApellido(),titular.getFecha_nacimiento(),titular.getCalle(),titular.getNro_casa(),
+	    		claseSeleccionada, "original",titular.getGrupo_sanguineo(),titular.getRh(),titular.getEs_donante(),observaciones,fechaEmision, 
+	    		"Juan Perez");
+		
+		String vigente = "si";
+		nuevaLicencia.setVigente(vigente);
+		
+		Date fecha_ven= nuevaLicencia.calcularVigencia(titular);
+		nuevaLicencia.setFecha_vencimiento(fecha_ven);
 		
 		
-		
-		
-		
-		
+		return nuevaLicencia;
 		
 		
 	}
+	
+	 public void cerrarInterfaz() {
+	        dispose(); 
+	    }
+	
+	
+	public void abrirMensajeExitoso() {
+		MensajeExitoso mensajeExitoso = new MensajeExitoso(this);
+		mensajeExitoso.setVisible(true);
+		setVisible(false); 
+	}
+	
 }
+
+
+
+
+
+
+
+
