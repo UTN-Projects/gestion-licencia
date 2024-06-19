@@ -39,6 +39,7 @@ public class MenuPrincipal extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contenidoMenu;
 	private InterfazFormulario interfazForms = null;
+	private InterfazGuardarTitular interfazFormTitular = null;
 	private JTextField fieldUsuario;
 	private JPasswordField fieldContra;
 		
@@ -197,6 +198,13 @@ public class MenuPrincipal extends JFrame {
 			 btnEmitirLicencia.setBounds(10, 53, 145, 28);
 			 funcionalidades.add(btnEmitirLicencia);
 			 btnEmitirLicencia.setLayout(null);
+
+			 JPanel btnGuardarTitular = new JPanel();
+			 btnGuardarTitular.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			 btnGuardarTitular.setBackground(new Color(69, 69, 69));
+			 btnGuardarTitular.setBounds(200, 53, 145, 28);
+			 funcionalidades.add(btnGuardarTitular);
+			 btnGuardarTitular.setLayout(null);
 			 
 			 JLabel textoBtnEmitirLicencia = new JLabel("Emitir licencia");
 			 textoBtnEmitirLicencia.addMouseListener(new MouseAdapter() {
@@ -218,12 +226,40 @@ public class MenuPrincipal extends JFrame {
 	
 			 	}
 			 });
+
+			 JLabel textoBtnGuardarTitular = new JLabel("Guardar Titular");
+			 textoBtnGuardarTitular.addMouseListener(new MouseAdapter() {
+			 	@Override
+			 	public void mouseClicked(MouseEvent e) {
+			 		
+			 		if (interfazFormTitular == null) {
+	                    interfazFormTitular = new InterfazGuardarTitular();
+	                    interfazFormTitular.setVisible(true);
+	                    interfazFormTitular.addWindowListener(new WindowAdapter() {
+	                        @Override
+	                        public void windowClosed(WindowEvent e) {
+	                            interfazFormTitular = null; // Establecer la referencia a null cuando se cierre la ventana
+	                        }
+	                    });
+	                } else {
+	                    interfazFormTitular.toFront(); // trae la ventana al frente si ya está abierta
+	                }
+	
+			 	}
+			 });
 			 textoBtnEmitirLicencia.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			 textoBtnEmitirLicencia.setForeground(new Color(255, 255, 255));
 			 textoBtnEmitirLicencia.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			 textoBtnEmitirLicencia.setHorizontalAlignment(SwingConstants.CENTER);
 			 textoBtnEmitirLicencia.setBounds(0, 0, 145, 28);
 			 btnEmitirLicencia.add(textoBtnEmitirLicencia);
+
+			 textoBtnGuardarTitular.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			 textoBtnGuardarTitular.setForeground(new Color(255, 255, 255));
+			 textoBtnGuardarTitular.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			 textoBtnGuardarTitular.setHorizontalAlignment(SwingConstants.CENTER);
+			 textoBtnGuardarTitular.setBounds(0, 0, 145, 28);
+			 btnGuardarTitular.add(textoBtnGuardarTitular);
 		
 		
 	

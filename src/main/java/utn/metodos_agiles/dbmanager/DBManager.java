@@ -14,11 +14,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import entidades.Contribuyente;
 import entidades.Licencia;
 import entidades.Titular;
 
 public class DBManager {
-	private static String url = "jdbc:mysql://localhost:3306/metodos_agiles";
+	private static String url = "jdbc:mysql://localhost:3306/gestion-licencia";
 	private static String user = "root";
 	private static String pass = "admin";
 	
@@ -36,29 +37,53 @@ public class DBManager {
 			e2.printStackTrace();
 		}
 	}
-	
-	public static void guardarTitular(int dni, String nombre, String apellido, Date fechaNac, String calle, int nro,
-			String grupoSang, String rh, Boolean esDonante) {
+
+
+    public static void guardarTitular(Contribuyente contribuyente) {
+		
 		Connection conn = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(url, user, pass);
-			Statement st = conn.createStatement();
-			String accion = "INSERT INTO TITULAR (dni, nombre, apellido, fecha_nacimiento, calle, nro casa, "
-					+ "grupo_sanguineo, rh, es_donante) VALUES " + dni + ", '" + nombre + "', '" + apellido + "', '"
-					+ fechaNac.getYear() + "-" + fechaNac.getMonth() + "-" + fechaNac.getDay() + "', '" + calle
-					+ ", " + nro + ", '" + grupoSang + "', '" + rh + "', '";
-			if(esDonante) accion = accion + "SI')";
-			else accion = accion + "NO')";
-			st.executeUpdate(accion);
-			st.close();
-			conn.close();
-		} catch(ClassNotFoundException e1) {
-			e1.printStackTrace();
-		} catch(SQLException e2) {
-			e2.printStackTrace();
-		}
-	}
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DriverManager.getConnection(url, user, pass);
+            conn.setAutoCommit(false);  
+            
+            String sqlInsert = "INSERT INTO titular (dni, nombre, apellido, fecha_nacimiento, calle, nro_casa, grupo_sanguineo, rh, es_donante) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(sqlInsert);
+            stmt.setInt(1, contribuyente.getDni());
+            stmt.setString(2, contribuyente.getNombre());
+            stmt.setString(3, contribuyente.getApellido());
+            stmt.setDate(4, contribuyente.getFecha_nacimiento());
+            stmt.setString(5, contribuyente.getCalle());
+            stmt.setInt(6, contribuyente.getNro_casa());
+            stmt.setString(7, contribuyente.getGrupo_sanguineo());
+            stmt.setString(8, contribuyente.getRh());
+            stmt.setString(9, contribuyente.getEs_donante());
+            stmt.executeUpdate();
+
+            conn.commit();  
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback();  // Deshacer la transacción en caso de error
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 	
 	
 	public static Titular buscarPorDni(int dni) {
@@ -94,6 +119,43 @@ public class DBManager {
 	        }
 	        
 	        return titular;
+	        
+		
+	}
+
+    public static Contribuyente buscarContribuyentePorDni(int dni) {
+		
+		String query = "SELECT * FROM contribuyente WHERE dni = ?";
+        Contribuyente contribuyente = null;
+		
+		try (Connection conn = DriverManager.getConnection(url, user, pass);
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+	            
+	            stmt.setInt(1, dni);
+	            ResultSet rs = stmt.executeQuery();
+	            
+	            if (rs.next()) {
+	                int dniObtenido = rs.getInt("dni");
+	                String nombre = rs.getString("nombre");
+	                String apellido = rs.getString("apellido");
+	                Date fecha_nac = rs.getDate("fecha_nacimiento");
+	                String calle = rs.getString("calle");
+	                int nro_casa = rs.getInt("nro_casa");
+	                String grupo_sanguineo = rs.getString("grupo_sanguineo");
+	                String rh = rs.getString("rh");
+	                String es_donante = rs.getString("es_donante");
+	                
+	                /*System.out.println(nombre);
+	                System.out.println(apellido);*/
+	                
+	                contribuyente = new Contribuyente(dniObtenido, nombre, apellido,fecha_nac, calle, nro_casa, grupo_sanguineo, rh, es_donante);
+	            }
+	            
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        
+	        return contribuyente;
 	        
 		
 	}
