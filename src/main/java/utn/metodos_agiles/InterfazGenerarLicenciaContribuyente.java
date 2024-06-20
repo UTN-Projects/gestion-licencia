@@ -1,46 +1,31 @@
 package utn.metodos_agiles;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.Window;
 
 import javax.swing.JComboBox;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 
 import entidades.Contribuyente;
 import entidades.Licencia;
 import entidades.Titular;
-import utn.metodos_agiles.dbmanager.DBManager;
+import utn.metodos_agiles.db.DBManager;
+import utn.metodos_agiles.view.InterfazFormulario;
+import utn.metodos_agiles.view.MensajeExitoso;
 
-import javax.swing.border.BevelBorder;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JList;
 import javax.swing.JTable;
 import java.awt.Toolkit;
-import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
