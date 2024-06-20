@@ -8,7 +8,7 @@ import java.util.Set;
 
 import utn.metodos_agiles.db.DBManager;
 
-public class Titular {
+public class Titular{
 
 	private int dni;
 	
