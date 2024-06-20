@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Set;
 
-import utn.metodos_agiles.dbmanager.DBManager;
+import utn.metodos_agiles.db.DBManager;
 
 public class Titular{
 

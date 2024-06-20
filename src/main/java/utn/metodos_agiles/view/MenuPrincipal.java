@@ -1,27 +1,17 @@
-package utn.metodos_agiles;
-
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+package utn.metodos_agiles.view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JTabbedPane;
-import java.awt.FlowLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.Window.Type;
 import javax.swing.SwingConstants;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -37,6 +27,9 @@ import javax.swing.JPasswordField;
 public class MenuPrincipal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	private static final String ESCUDO_ARG_PATH = "src/main/resources/imagenes/Escudo_Argentina.png";
+	private static final String PUENTE_COLGANTE_PATH = "src/main/resources/imagenes/puente_colgante_desenfocado.png";
+
 	private JPanel contenidoMenu;
 	private InterfazFormulario interfazForms = null;
 	private InterfazGuardarTitular interfazFormTitular = null;
@@ -45,7 +38,7 @@ public class MenuPrincipal extends JFrame {
 		
 	public MenuPrincipal() {
 		setTitle("Sistema de licencias");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/imagenes/Escudo_Argentina.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ESCUDO_ARG_PATH));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(700, 300, 600, 450);
@@ -181,7 +174,7 @@ public class MenuPrincipal extends JFrame {
 			 
 			 JLabel imagenPuente = new JLabel("");
 			 imagenPuente.setBorder(new LineBorder(new Color(69, 69, 69), 2, true));
-			 imagenPuente.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imagenes/puente colgante para el sistema desenfocado.png")));
+			 imagenPuente.setIcon(new ImageIcon(PUENTE_COLGANTE_PATH));
 			 imagenPuente.setBounds(10, 11, 559, 77);
 			 tabMenuPrincipal.add(imagenPuente);
 		

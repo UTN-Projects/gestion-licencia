@@ -1,4 +1,4 @@
-package utn.metodos_agiles;
+package utn.metodos_agiles.util;
 
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -10,6 +10,8 @@ import org.vandeseer.easytable.TableDrawer;
 import org.vandeseer.easytable.structure.Row;
 import org.vandeseer.easytable.structure.Table;
 import org.vandeseer.easytable.structure.cell.TextCell;
+import utn.metodos_agiles.model.ClientDto;
+import utn.metodos_agiles.model.FacturaItem;
 
 import java.awt.*;
 import java.io.IOException;
@@ -29,7 +31,7 @@ public class FacturaGenerator {
 
     private FacturaGenerator() {}
 
-    public static void generar(Client client, List<Item> items, String filePath) {
+    public static void generar(ClientDto client, List<FacturaItem> items, String filePath) {
 
         try (PDDocument document = new PDDocument()) {
             PDPage page = new PDPage(PDRectangle.A4);
@@ -103,7 +105,7 @@ public class FacturaGenerator {
         return rows;
     }
 
-    private static Row clienteRow(Client client) {
+    private static Row clienteRow(ClientDto client) {
         return Row.builder()
                 .add(TextCell.builder().text("Cliente:\nDireccion:\nCond. IVA:\nDNI:")
                         .font(new PDType1Font(HELVETICA_BOLD))
@@ -123,7 +125,7 @@ public class FacturaGenerator {
                 .build();
     }
 
-    private static List<Row> itemsRows(List<Item> items) {
+    private static List<Row> itemsRows(List<FacturaItem> items) {
         List<Row> rows = new ArrayList<>();
 
         rows.add(Row.builder()
@@ -138,7 +140,7 @@ public class FacturaGenerator {
         double grandTotal = 0;
         for (int i = 0; i < 18; i++) {
             if(i< items.size()) {
-                final Item dataRow = items.get(i);
+                final FacturaItem dataRow = items.get(i);
                 final double total = dataRow.value;
                 grandTotal += total;
 
@@ -175,18 +177,3 @@ public class FacturaGenerator {
     }
 }
 
-class Client {
-    public String name;
-    public String address;
-    public String dni;
-}
-
-class Item {
-    public String description;
-    public Float value;
-
-    Item(String description, Float value) {
-        this.description = description;
-        this.value = value;
-    }
-}
