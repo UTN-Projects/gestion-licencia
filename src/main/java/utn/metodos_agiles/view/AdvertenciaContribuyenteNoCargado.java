@@ -1,6 +1,4 @@
-package utn.metodos_agiles;
-
-import java.awt.EventQueue;
+package utn.metodos_agiles.view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,8 +10,6 @@ import javax.swing.SwingConstants;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import javax.swing.ImageIcon;
 
 public class AdvertenciaContribuyenteNoCargado extends JFrame {
 

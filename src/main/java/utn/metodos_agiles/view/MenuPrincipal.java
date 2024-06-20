@@ -1,7 +1,5 @@
 package utn.metodos_agiles.view;
 
-import utn.metodos_agiles.InterfazGuardarTitular;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -20,8 +18,6 @@ import java.awt.event.WindowEvent;
 import javax.swing.border.LineBorder;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
-import java.awt.Point;
-import java.awt.Rectangle;
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
 import javax.swing.JPasswordField;

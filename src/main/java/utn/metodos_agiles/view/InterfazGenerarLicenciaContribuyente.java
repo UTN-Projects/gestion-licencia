@@ -1,4 +1,4 @@
-package utn.metodos_agiles;
+package utn.metodos_agiles.view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
