@@ -21,7 +21,7 @@ import entidades.Titular;
 public class DBManager {
 	private static String url = "jdbc:mysql://localhost:3306/gestion-licencia";
 	private static String user = "root";
-	private static String pass = "admin";
+	private static String pass = "kaarlos!";
 	
 	public static void probarDB() {
 		Connection conn = null;
