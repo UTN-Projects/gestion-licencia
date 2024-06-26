@@ -28,6 +28,7 @@ import java.util.Set;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
+import javax.swing.text.AbstractDocument;
 
 
 public class InterfazFormulario extends JFrame {
@@ -78,6 +79,7 @@ public class InterfazFormulario extends JFrame {
         datosDni.setLayout(null);
         
         txtDni = new JTextField();
+        ((AbstractDocument) txtDni.getDocument()).setDocumentFilter(new NumericAndLengthFilter(8));
         txtDni.setForeground(new Color(69, 69, 69));
         txtDni.setFont(new Font("Tahoma", Font.PLAIN, 17));
         txtDni.setDisabledTextColor(new Color(255, 255, 255));
@@ -295,22 +297,25 @@ public class InterfazFormulario extends JFrame {
 	    
 	    LocalDate fechaEmisionLocal = LocalDate.now();
 	    Date fechaEmision = Date.valueOf(fechaEmisionLocal);
-	    
-	    Licencia nuevaLicencia = new Licencia(titular.getDni(), titular.getNombre(), 
-	    		titular.getApellido(),titular.getFecha_nacimiento(),titular.getCalle(),titular.getNro_casa(),
-	    		claseSeleccionada, "original",titular.getGrupo_sanguineo(),titular.getRh(),titular.getEs_donante(),observaciones,fechaEmision, 
-	    		"Juan Perez");
-		
-		String vigente = "si";
-		nuevaLicencia.setVigente(vigente);
-		
-		Date fecha_ven= nuevaLicencia.calcularVigencia(titular);
-		nuevaLicencia.setFecha_vencimiento(fecha_ven);
-		
-		
-		return nuevaLicencia;
-		
-		
+
+        return Licencia.builder()
+                .dni_titular(titular.getDni())
+                .nombre_titular(titular.getNombre())
+                .apellido_titular(titular.getApellido())
+                .fecha_nac_titular(titular.getFecha_nacimiento())
+                .calle_titular(titular.getCalle())
+                .nro_casa_titular(titular.getNro_casa())
+                .clase(claseSeleccionada)
+                .tipo("original")
+                .grupo_sang_titular(titular.getGrupo_sanguineo())
+                .rh_titular(titular.getRh())
+                .es_donante_titular(titular.getEs_donante())
+                .observaciones(observaciones)
+                .fecha_emision(fechaEmision)
+                .administrador("Juan Perez")
+                .vigente("si")
+                .fecha_vencimiento(Licencia.calcularVigencia(titular))
+                .build();
 	}
 	
 	 public void cerrarInterfaz() {

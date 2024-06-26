@@ -177,22 +177,25 @@ public class InterfazGenerarLicenciaContribuyente extends JFrame {
 	    
 	    LocalDate fechaEmisionLocal = LocalDate.now();
 	    Date fechaEmision = Date.valueOf(fechaEmisionLocal);
-	    
-	    Licencia nuevaLicencia = new Licencia(contribuyente.getDni(), contribuyente.getNombre(), 
-	    		contribuyente.getApellido(),contribuyente.getFecha_nacimiento(),contribuyente.getCalle(),contribuyente.getNro_casa(),
-	    		claseSeleccionada, "original",contribuyente.getGrupo_sanguineo(),contribuyente.getRh(),contribuyente.getEs_donante(),observaciones,fechaEmision, 
-	    		"Juan Perez");
-		
-		String vigente = "si";
-		nuevaLicencia.setVigente(vigente);
-		
-		Date fecha_ven= nuevaLicencia.calcularVigencia(contribuyente);
-		nuevaLicencia.setFecha_vencimiento(fecha_ven);
-		
-		
-		return nuevaLicencia;
-		
-		
+
+        return Licencia.builder()
+                .dni_titular(contribuyente.getDni())
+                .nombre_titular(contribuyente.getNombre())
+                .apellido_titular(contribuyente.getApellido())
+                .fecha_nac_titular(contribuyente.getFecha_nacimiento())
+                .calle_titular(contribuyente.getCalle())
+                .nro_casa_titular(contribuyente.getNro_casa())
+                .clase(claseSeleccionada)
+                .tipo("original")
+                .grupo_sang_titular(contribuyente.getGrupo_sanguineo())
+                .rh_titular(contribuyente.getRh())
+                .es_donante_titular(contribuyente.getEs_donante())
+                .observaciones(observaciones)
+                .fecha_emision(fechaEmision)
+                .administrador("Juan Perez")
+                .vigente("si")
+                .fecha_vencimiento(Licencia.calcularVigencia(contribuyente))
+                .build();
 	}
 	
 	 public void cerrarInterfaz() {
