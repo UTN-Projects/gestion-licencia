@@ -186,6 +186,68 @@ public class DBManager {
 
         return licencias;
 	}
+
+    public static Set<Licencia> recuperarLicenciasVencidas() {
+        Set<Licencia> licencias = new HashSet<>();
+
+        String sql = "SELECT * FROM licencia WHERE fecha_vencimiento < ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setDate( 1, Date.valueOf(LocalDate.now()));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int dni_titular = rs.getInt("dni_titular");
+                    String nombreTitular = rs.getString("nombre_titular");
+                    String apellido_titular = rs.getString("apellido_titular");
+                    Date fecha_nac_titular = rs.getDate("fecha_nac_titular");
+                    String calle_titular = rs.getString("calle_titular");
+                    int nro_casa_titular = rs.getInt("nro_casa_titular");
+                    String clase = rs.getString("clase");
+                    String tipo = rs.getString("tipo");
+                    String grupo_sang_titular = rs.getString("grupo_sang_titular");
+                    String rh_titular = rs.getString("rh_titular");
+                    String es_donante_titular = rs.getString("es_donante_titular");
+                    String observaciones = rs.getString("observaciones");
+                    Date fecha_emision = rs.getDate("fecha_emision");
+                    String administrador = rs.getString("administrador");
+                    String vigente = rs.getString("vigente");
+                    Date fecha_vencimiento = rs.getDate("fecha_vencimiento");
+
+                    Licencia licencia = Licencia.builder()
+                            .dni_titular(dni_titular)
+                            .nombre_titular(nombreTitular)
+                            .apellido_titular(apellido_titular)
+                            .fecha_nac_titular(fecha_nac_titular)
+                            .calle_titular(calle_titular)
+                            .nro_casa_titular(nro_casa_titular)
+                            .clase(clase)
+                            .tipo(tipo)
+                            .grupo_sang_titular(grupo_sang_titular)
+                            .rh_titular(rh_titular)
+                            .es_donante_titular(es_donante_titular)
+                            .observaciones(observaciones)
+                            .fecha_emision(fecha_emision)
+                            .administrador(administrador)
+                            .vigente(vigente)
+                            .fecha_vencimiento(fecha_vencimiento)
+                            .build();
+
+                    licencias.add(licencia);
+
+                    System.out.println(licencias);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Manejo de errores (registrar el error, lanzar una excepción, etc.)
+        }
+
+        return licencias;
+    }
 	
 	public static Boolean permitidoClaseProfesional(int dni) {
 		
