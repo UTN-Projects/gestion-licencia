@@ -1,50 +1,37 @@
 package utn.metodos_agiles.view;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-
-import java.awt.Color;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-
-import entidades.Contribuyente;
-import entidades.Titular;
+import entidades.Licencia;
 import utn.metodos_agiles.db.DBManager;
 
-import javax.swing.JTable;
-import java.awt.Toolkit;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
-import java.awt.Cursor;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
-import javax.swing.text.AbstractDocument;
 
-
-public class InterfazGuardarTitular extends JFrame {
+public class InterfazLicenciasVigentes extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-    private InterfazGenerarLicenciaContribuyente interfazLicenciaContribuyente;
 	private JPanel contentPane;
 	private JTextField txtDni;
 	private JTable tablaDatos;
 	private JTextField textoObs;
-	private Contribuyente contribuyente;
-	
+	private Set<Licencia> licencias;
 
-	public InterfazGuardarTitular() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazGuardarTitular.class.getResource("/imagenes/Escudo_Argentina.png")));
+
+	public InterfazLicenciasVigentes() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazLicenciasVigentes.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
-		setTitle("Guardar Titular");
+		setTitle("Licencias Vigentes");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 300, 600, 450);
 		
@@ -63,7 +50,7 @@ public class InterfazGuardarTitular extends JFrame {
         datosDelTitular.setBackground(new Color(251, 203, 60));
         datosDelTitular.setBounds(10, 11, 564, 125);
         contentPane.add(datosDelTitular);
-        datosDelTitular.setBorder(new TitledBorder(new LineBorder(new Color(69, 69, 69), 2, true), "Datos del Contribuyente", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(69, 69, 69)));
+        datosDelTitular.setBorder(new TitledBorder(new LineBorder(new Color(69, 69, 69), 2, true), "Datos del Titular", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(69, 69, 69)));
         datosDelTitular.setLayout(null);
        
         
@@ -109,7 +96,7 @@ public class InterfazGuardarTitular extends JFrame {
         	@Override
         	public void mouseClicked(MouseEvent e) {
         		
-        		contribuyente = buscarContribuyente();  
+        		buscarLicencias();
         		
         	}
         });
@@ -130,19 +117,35 @@ public class InterfazGuardarTitular extends JFrame {
         contentPane.add(resultadoBusqueda);
         
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(20, 41, 519, 58);
+        scrollPane.setBounds(20, 41, 519, 150);
         resultadoBusqueda.add(scrollPane);
         
         tablaDatos = new JTable();
-        tablaDatos.setModel(new DefaultTableModel(
-        	new Object[][] {
-        		{"", null, null},
-        		
-        	},
-        	new String[] {
-        		"DNI", "NOMBRE", "APELLIDO"
-        	}
-        ));
+        DefaultTableModel tableModel = new DefaultTableModel(
+                new Object[][]{},
+                new String[] {
+                        "DNI", "NOMBRE", "APELLIDO","CLASE", "TIPO", "SANGRE", "DONANTE", "CADUCIDAD"
+                }
+        );
+
+        licencias = DBManager.getInstance().recuperarLicenciasVigentes().stream()
+                .sorted(Comparator.comparingInt(licencia -> licencia.getTitular().getDni()))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        licencias.forEach(licencia -> {
+            tableModel.addRow(new Object[]{
+                    licencia.getTitular().getDni(),
+                    licencia.getNombreTitular(),
+                    licencia.getApellidoTitular(),
+                    licencia.getClase(),
+                    licencia.getTipo(),
+                    licencia.getGrupoSangTitular().toString()+licencia.getRhTitular(),
+                    licencia.isEsDonanteTitular(),
+                    licencia.getFechaVencimiento()
+        });
+        });
+
+        tablaDatos.setModel(tableModel);
         scrollPane.setViewportView(tablaDatos);
         
         JPanel btnCancelar = new JPanel();
@@ -165,89 +168,39 @@ public class InterfazGuardarTitular extends JFrame {
         btnCancelarTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
         btnCancelarTxt.setBounds(0, 0, 96, 23);
         btnCancelar.add(btnCancelarTxt);
-        
-        JPanel btnEmitir = new JPanel();
-        btnEmitir.setLayout(null);
-        btnEmitir.setBackground(new Color(69, 69, 69));
-        btnEmitir.setBounds(478, 377, 96, 23);
-        contentPane.add(btnEmitir);
-        
-        JLabel btnEmitirTxt = new JLabel("Guardar");
-        btnEmitirTxt.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		
-        		if (interfazLicenciaContribuyente == null) {
-                    if(contribuyente!=null){
-                        Titular auxTitular = DBManager.getInstance().buscarPorDni(contribuyente.getDni());
-                        if(auxTitular == null){
-                            interfazLicenciaContribuyente = new InterfazGenerarLicenciaContribuyente(contribuyente);
-                            interfazLicenciaContribuyente.setVisible(true);
-                            setVisible(false);
-                            interfazLicenciaContribuyente.addWindowListener(new WindowAdapter() {
-                                @Override
-                                public void windowClosed(WindowEvent e) {
-                                    interfazLicenciaContribuyente = null; // Establecer la referencia a null cuando se cierre la ventana
-                                }
-                            });
-                        } else {
-                            abrirMensajeTitularExistente();
-                        }
-                    } else {
-                        abrirMensajeContribuyenteNoCargado();
-                    }
-                } else {
-                    interfazLicenciaContribuyente.toFront(); // trae la ventana al frente si ya está abierta
-                }
-        		cerrarInterfaz();
-        		
-        		
-        	}
-        });
-        btnEmitirTxt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnEmitirTxt.setHorizontalAlignment(SwingConstants.CENTER);
-        btnEmitirTxt.setForeground(Color.WHITE);
-        btnEmitirTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        btnEmitirTxt.setBounds(0, 0, 96, 23);
-        btnEmitir.add(btnEmitirTxt);
-		
-	
-		
-			}
+
+    }
 	
 	
-	private Contribuyente buscarContribuyente() {
+	private void buscarLicencias() {
 		 
-		int dni = Integer.parseInt(txtDni.getText());
-		    Contribuyente contribuyente = DBManager.getInstance().buscarContribuyentePorDni(dni);
-		    if (contribuyente != null) {
+		Integer dni = txtDni.getText().isEmpty()? null : Integer.parseInt(txtDni.getText());
+        List<Licencia> licenciasFiltered = licencias.stream().filter(licencia -> dni == null || licencia.getTitular().getDni() == dni).toList();
+
+		    if (!licenciasFiltered.isEmpty()) {
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
 		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
-		        model.addRow(new Object[]{contribuyente.getDni(), contribuyente.getNombre(), contribuyente.getApellido()});
+
+                        licenciasFiltered.forEach(licencia -> model.addRow(new Object[]{
+                                licencia.getTitular().getDni(),
+                                licencia.getNombreTitular(),
+                                licencia.getApellidoTitular(),
+                                licencia.getClase(),
+                                licencia.getTipo(),
+                                licencia.getGrupoSangTitular().toString()+licencia.getRhTitular(),
+                                licencia.isEsDonanteTitular(),
+                                licencia.getFechaVencimiento()
+                        }));
+
 		    } else {
 		        // Mostrar mensaje de que no se encontró el titular
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
 		        model.setRowCount(0); // Limpiar la tabla si no se encontró el titular
 		        model.addRow(new Object[]{"No encontrado", "", ""});
-		        return null;
 		    }
-	    return contribuyente;
 	}
 	
 	 public void cerrarInterfaz() {
 	        dispose(); 
 	    }
-
-    public void abrirMensajeTitularExistente() {
-        AdvertenciaTitularExistente titularExistente = new AdvertenciaTitularExistente(this);
-        titularExistente.setVisible(true);
-        setVisible(false);
-    }
-
-    public void abrirMensajeContribuyenteNoCargado() {
-        AdvertenciaContribuyenteNoCargado contribuyenteNoCargado = new AdvertenciaContribuyenteNoCargado(this);
-        contribuyenteNoCargado.setVisible(true);
-        setVisible(false);
-    }
-	
 }

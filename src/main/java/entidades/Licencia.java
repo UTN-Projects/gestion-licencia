@@ -1,106 +1,67 @@
 package entidades;
 
-import lombok.Builder;
-import lombok.Data;
-
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 
-@Data
+
+@Entity
+@Table(name="licencia")
+@Getter
+@Setter
 @Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Licencia {
-	
-	private int dni_titular;
-	
-	private String nombre_titular;
-	
-	private String apellido_titular;
-	
-	private Date fecha_nac_titular;
-	
-	private String calle_titular;
-	
-	private int nro_casa_titular;
-	
-	private String clase;
-	
-	private String tipo;
-	
-	private String grupo_sang_titular;
-	
-	private String rh_titular;
-	
-	private String es_donante_titular;
-	
+
+	@Id
+	@UuidGenerator
+	private String id;
+
+	private String nombreTitular;
+
+	private String apellidoTitular;
+
+	private Date fechaNacTitular;
+
+	private String calleTitular;
+
+	private int nroCasaTitular;
+
+	private boolean esDonanteTitular;
+
 	private String observaciones;
-	
-	private Date fecha_emision;
-	
+
+	private Date fechaEmision;
+
 	private String administrador;
 	
-	private String vigente;
-	
-	private Date fecha_vencimiento;
+	private boolean vigente;
 
-	public static Date calcularVigencia(Titular titular) {
-		
-		int edad = titular.getEdad();
-	    int cantLic = titular.cantLicencias();
-	    LocalDate fechaNacimiento = titular.getFecha_nacimiento().toLocalDate();
-	    
-	    int vigenciaAnos = 0;
-	    if (edad < 21) {
-	        if (cantLic == 1) {
-	            vigenciaAnos = 1;
-	        } else {
-	            vigenciaAnos = 3;
-	        }
-	    } else if (edad <= 46) {
-	        vigenciaAnos = 5;
-	    } else if (edad <= 60) {
-	        vigenciaAnos = 4;
-	    } else if (edad <= 70) {
-	        vigenciaAnos = 3;
-	    } else if (edad > 70) {
-	        vigenciaAnos = 1;
-	    }
+	private Date fechaVencimiento;
 
-	    LocalDate fechaActual = LocalDate.now();
-	    int anoVencimiento = fechaActual.getYear() + vigenciaAnos;
+	@Enumerated(EnumType.STRING)
+	private ClaseLicencia clase;
 
-	    LocalDate fechaVencimiento = LocalDate.of(anoVencimiento, fechaNacimiento.getMonth(), fechaNacimiento.getDayOfMonth());
-	    
-	    System.out.println(fechaVencimiento);
-	    
-	    return Date.valueOf(fechaVencimiento);
-	    
-	}
+	@Enumerated(EnumType.STRING)
+	private TipoLicencia tipo;
+
+	@Enumerated(EnumType.STRING)
+	private GrupoSaguineo grupoSangTitular;
+
+    @Enumerated(EnumType.STRING)
+    private RH rhTitular;
+
+    @ManyToOne
+    @JoinColumn(name = "dni_titular")
+    private Titular titular;
 
 	public int calcularCostoLicencia() {
 		int costoLicencia = 0;
-		int aniosVigencia = this.getFecha_vencimiento().toLocalDate().getYear() - this.getFecha_emision().toLocalDate().getYear();
+		int aniosVigencia = this.getFechaVencimiento().toLocalDate().getYear() - this.getFechaEmision().toLocalDate().getYear();
 		switch (this.getClase()) {
-			case "A":
-				switch (aniosVigencia) {
-					case 5:
-						costoLicencia = 40;
-						break;
-					case 4:
-						costoLicencia = 30;
-						break;
-					case 3:
-						costoLicencia = 25;
-						break;
-					case 1: 
-						costoLicencia = 20;
-						break;
-					default:
-						break;
-				}
-				break;
-			case "B":
+            case ClaseLicencia.A:
 				switch (aniosVigencia) {
 					case 5:
 						costoLicencia = 40;
@@ -113,11 +74,29 @@ public class Licencia {
 						break;
 					case 1:
 						costoLicencia = 20;
-						break;	
+						break;
 					default:
 						break;
 				}
-			case "C":
+				break;
+            case ClaseLicencia.B:
+				switch (aniosVigencia) {
+					case 5:
+						costoLicencia = 40;
+						break;
+					case 4:
+						costoLicencia = 30;
+						break;
+					case 3:
+						costoLicencia = 25;
+						break;
+					case 1:
+						costoLicencia = 20;
+						break;
+					default:
+						break;
+				}
+            case ClaseLicencia.C:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 47;
@@ -134,7 +113,7 @@ public class Licencia {
 				default:
 					break;
 			}
-			case "D":
+            case ClaseLicencia.D:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 50;
@@ -151,7 +130,7 @@ public class Licencia {
 				default:
 					break;
 			}
-			case "E":
+            case ClaseLicencia.E:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 59;
@@ -168,7 +147,7 @@ public class Licencia {
 				default:
 					break;
 			}
-			case "F":
+            case ClaseLicencia.F:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 50;
@@ -185,7 +164,7 @@ public class Licencia {
 				default:
 					break;
 			}
-			case "G":
+            case ClaseLicencia.G:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 40;
@@ -202,11 +181,10 @@ public class Licencia {
 				default:
 					break;
 			}
-			default:	
+			default:
 				break;
 		}
 		costoLicencia = costoLicencia + 8;
 		return costoLicencia;
 	}
 }
-
