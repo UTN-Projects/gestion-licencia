@@ -179,7 +179,7 @@ public class InterfazGuardarTitular extends JFrame {
         		
         		if (interfazLicenciaContribuyente == null) {
                     if(contribuyente!=null){
-                        Titular auxTitular = DBManager.buscarPorDni(contribuyente.getDni());
+                        Titular auxTitular = DBManager.getInstance().buscarPorDni(contribuyente.getDni());
                         if(auxTitular == null){
                             interfazLicenciaContribuyente = new InterfazGenerarLicenciaContribuyente(contribuyente);
                             interfazLicenciaContribuyente.setVisible(true);
@@ -219,7 +219,7 @@ public class InterfazGuardarTitular extends JFrame {
 	private Contribuyente buscarContribuyente() {
 		 
 		int dni = Integer.parseInt(txtDni.getText());
-		    Contribuyente contribuyente = DBManager.buscarContribuyentePorDni(dni);
+		    Contribuyente contribuyente = DBManager.getInstance().buscarContribuyentePorDni(dni);
 		    if (contribuyente != null) {
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
 		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos

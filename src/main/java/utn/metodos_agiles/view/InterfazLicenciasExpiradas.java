@@ -133,17 +133,17 @@ public class InterfazLicenciasExpiradas extends JFrame {
                 }
         );
 
-        licencias = DBManager.recuperarLicenciasVencidas().stream()
-                .sorted(Comparator.comparingInt(Licencia::getDni_titular))
+        licencias = DBManager.getInstance().recuperarLicenciasVencidas().stream()
+                .sorted(Comparator.comparingInt(licencia -> licencia.getTitular().getDni()))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
         licencias.forEach(licencia -> {
             tableModel.addRow(new Object[]{
-                    licencia.getDni_titular(),
-                    licencia.getNombre_titular(),
-                    licencia.getApellido_titular(),
+                    licencia.getTitular().getDni(),
+                    licencia.getNombreTitular(),
+                    licencia.getApellidoTitular(),
                     licencia.getTipo(),
-                    licencia.getFecha_vencimiento()
+                    licencia.getFechaVencimiento()
         });
         });
 
@@ -177,18 +177,18 @@ public class InterfazLicenciasExpiradas extends JFrame {
 	private void buscarLicencias() {
 		 
 		Integer dni = txtDni.getText().isEmpty()? null : Integer.parseInt(txtDni.getText());
-        List<Licencia> licenciasFiltered = licencias.stream().filter(licencia -> dni == null || licencia.getDni_titular() == dni).toList();
+        List<Licencia> licenciasFiltered = licencias.stream().filter(licencia -> dni == null || licencia.getTitular().getDni() == dni).toList();
 
 		    if (!licenciasFiltered.isEmpty()) {
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
 		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
 
                         licenciasFiltered.forEach(licencia -> model.addRow(new Object[]{
-                        licencia.getDni_titular(),
-                        licencia.getNombre_titular(),
-                        licencia.getApellido_titular(),
+                        licencia.getTitular().getDni(),
+                        licencia.getNombreTitular(),
+                        licencia.getApellidoTitular(),
                         licencia.getTipo(),
-                        licencia.getFecha_vencimiento()}));
+                        licencia.getFechaVencimiento()}));
 
 		    } else {
 		        // Mostrar mensaje de que no se encontró el titular

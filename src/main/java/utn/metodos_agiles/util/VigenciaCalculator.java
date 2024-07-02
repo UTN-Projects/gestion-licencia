@@ -1,10 +1,11 @@
 package utn.metodos_agiles.util;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.sql.Date;
 
 public class VigenciaCalculator {
-    private static Date calcularVigencia(int edad, int nroLicTit) {
-        Date vig = new Date();
+    public static Date calcularVigencia(int edad, int nroLicTit) {
+        LocalDate vig = LocalDate.now();
         int mas = 0;
         if(edad < 21) {
             if(nroLicTit == 1) {
@@ -19,7 +20,7 @@ public class VigenciaCalculator {
         } else if(edad > 70) {
             mas = 1;
         }
-        vig.setYear(vig.getYear() + mas);
-        return vig;
+
+        return Date.valueOf(vig.plusYears(mas));
     }
 }

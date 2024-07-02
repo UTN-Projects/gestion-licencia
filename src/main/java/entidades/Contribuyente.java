@@ -1,14 +1,49 @@
 package entidades;
 
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
 
-public class Contribuyente extends Titular{
-    
 
-	 public Contribuyente(int dni, String nombre, String apellido, Date fecha_nac, String calle2, int nro_casa2, String grupo_sanguineo2, String rh2, String es_donante2) {
-	        super(dni, nombre, apellido, fecha_nac, calle2, nro_casa2, grupo_sanguineo2, rh2, es_donante2);
-	    }
+@Entity
+@Table(name="contribuyente")
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class Contribuyente {
+
+	@Id
+	private Integer dni;
+
+	private String nombre;
+
+	private String apellido;
+
+	private Date fechaNacimiento;
+
+	private String calle;
+
+	private Integer nroCasa;
+
+	@Enumerated(EnumType.STRING)
+	private GrupoSaguineo grupoSanguineo;
+
+	@Enumerated(EnumType.STRING)
+	private RH rh;
+
+	private Boolean esDonante;
+
+	public int getEdad() {
+		LocalDate fechaNacimientoLocal = this.fechaNacimiento.toLocalDate();
+		LocalDate fechaActual = LocalDate.now();
+
+		return Period.between(fechaNacimientoLocal, fechaActual).getYears();
+
+	}
 
 }
