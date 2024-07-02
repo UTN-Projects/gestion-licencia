@@ -50,11 +50,141 @@ public class Licencia {
 	@Enumerated(EnumType.STRING)
 	private GrupoSaguineo grupoSangTitular;
 
-	@Enumerated(EnumType.STRING)
-	private RH rhTitular;
+    @Enumerated(EnumType.STRING)
+    private RH rhTitular;
 
-	@ManyToOne
-	@JoinColumn(name = "dni_titular")
-	private Titular titular;
+    @ManyToOne
+    @JoinColumn(name = "dni_titular")
+    private Titular titular;
 
+	public int calcularCostoLicencia() {
+		int costoLicencia = 0;
+		int aniosVigencia = this.getFechaVencimiento().toLocalDate().getYear() - this.getFechaEmision().toLocalDate().getYear();
+		switch (this.getClase()) {
+            case ClaseLicencia.A:
+				switch (aniosVigencia) {
+					case 5:
+						costoLicencia = 40;
+						break;
+					case 4:
+						costoLicencia = 30;
+						break;
+					case 3:
+						costoLicencia = 25;
+						break;
+					case 1:
+						costoLicencia = 20;
+						break;
+					default:
+						break;
+				}
+				break;
+            case ClaseLicencia.B:
+				switch (aniosVigencia) {
+					case 5:
+						costoLicencia = 40;
+						break;
+					case 4:
+						costoLicencia = 30;
+						break;
+					case 3:
+						costoLicencia = 25;
+						break;
+					case 1:
+						costoLicencia = 20;
+						break;
+					default:
+						break;
+				}
+            case ClaseLicencia.C:
+			switch (aniosVigencia) {
+				case 5:
+					costoLicencia = 47;
+					break;
+				case 4:
+					costoLicencia = 35;
+					break;
+				case 3:
+					costoLicencia = 30;
+					break;
+				case 1:
+					costoLicencia = 23;
+					break;
+				default:
+					break;
+			}
+            case ClaseLicencia.D:
+			switch (aniosVigencia) {
+				case 5:
+					costoLicencia = 50;
+					break;
+				case 4:
+					costoLicencia = 40;
+					break;
+				case 3:
+					costoLicencia = 35;
+					break;
+				case 1:
+					costoLicencia = 30;
+					break;
+				default:
+					break;
+			}
+            case ClaseLicencia.E:
+			switch (aniosVigencia) {
+				case 5:
+					costoLicencia = 59;
+					break;
+				case 4:
+					costoLicencia = 44;
+					break;
+				case 3:
+					costoLicencia = 39;
+					break;
+				case 1:
+					costoLicencia = 29;
+					break;
+				default:
+					break;
+			}
+            case ClaseLicencia.F:
+			switch (aniosVigencia) {
+				case 5:
+					costoLicencia = 50;
+					break;
+				case 4:
+					costoLicencia = 40;
+					break;
+				case 3:
+					costoLicencia = 35;
+					break;
+				case 1:
+					costoLicencia = 30;
+					break;
+				default:
+					break;
+			}
+            case ClaseLicencia.G:
+			switch (aniosVigencia) {
+				case 5:
+					costoLicencia = 40;
+					break;
+				case 4:
+					costoLicencia = 30;
+					break;
+				case 3:
+					costoLicencia = 25;
+					break;
+				case 1:
+					costoLicencia = 20;
+					break;
+				default:
+					break;
+			}
+			default:
+				break;
+		}
+		costoLicencia = costoLicencia + 8;
+		return costoLicencia;
+	}
 }
