@@ -31,6 +31,7 @@ public class MenuPrincipal extends JFrame {
 	private JPanel contenidoMenu;
 	private InterfazFormulario interfazForms = null;
 	private InterfazGuardarTitular interfazFormTitular = null;
+	private InterfazLicenciasExpiradas interfazLicenciasExpiradas = null;
 	private JTextField fieldUsuario;
 	private JPasswordField fieldContra;
 		
@@ -196,7 +197,14 @@ public class MenuPrincipal extends JFrame {
 			 btnGuardarTitular.setBounds(200, 53, 145, 28);
 			 funcionalidades.add(btnGuardarTitular);
 			 btnGuardarTitular.setLayout(null);
-			 
+
+			JPanel btnLicenciasExpiradas = new JPanel();
+			btnLicenciasExpiradas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btnLicenciasExpiradas.setBackground(new Color(69, 69, 69));
+			btnLicenciasExpiradas.setBounds(390, 53, 145, 28);
+			funcionalidades.add(btnLicenciasExpiradas);
+			btnLicenciasExpiradas.setLayout(null);
+
 			 JLabel textoBtnEmitirLicencia = new JLabel("Emitir licencia");
 			 textoBtnEmitirLicencia.addMouseListener(new MouseAdapter() {
 			 	@Override
@@ -238,6 +246,27 @@ public class MenuPrincipal extends JFrame {
 	
 			 	}
 			 });
+
+			JLabel textoBtnLicenciasExpiradas = new JLabel("Licencias Expiradas");
+			textoBtnLicenciasExpiradas.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+
+					if (interfazLicenciasExpiradas == null) {
+						interfazLicenciasExpiradas = new InterfazLicenciasExpiradas();
+						interfazLicenciasExpiradas.setVisible(true);
+						interfazLicenciasExpiradas.addWindowListener(new WindowAdapter() {
+							@Override
+							public void windowClosed(WindowEvent e) {
+								interfazLicenciasExpiradas = null; // Establecer la referencia a null cuando se cierre la ventana
+							}
+						});
+					} else {
+						interfazLicenciasExpiradas.toFront(); // trae la ventana al frente si ya está abierta
+					}
+
+				}
+			});
 			 textoBtnEmitirLicencia.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			 textoBtnEmitirLicencia.setForeground(new Color(255, 255, 255));
 			 textoBtnEmitirLicencia.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -251,8 +280,13 @@ public class MenuPrincipal extends JFrame {
 			 textoBtnGuardarTitular.setHorizontalAlignment(SwingConstants.CENTER);
 			 textoBtnGuardarTitular.setBounds(0, 0, 145, 28);
 			 btnGuardarTitular.add(textoBtnGuardarTitular);
-		
-		
+
+			textoBtnLicenciasExpiradas.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			textoBtnLicenciasExpiradas.setForeground(new Color(255, 255, 255));
+			textoBtnLicenciasExpiradas.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			textoBtnLicenciasExpiradas.setHorizontalAlignment(SwingConstants.CENTER);
+			textoBtnLicenciasExpiradas.setBounds(0, 0, 145, 28);
+			btnLicenciasExpiradas.add(textoBtnLicenciasExpiradas);
 	
 	}
 }

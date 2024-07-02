@@ -6,8 +6,10 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Set;
 
+import lombok.Data;
 import utn.metodos_agiles.db.DBManager;
 
+@Data
 public class Titular{
 
 	private int dni;
@@ -39,80 +41,6 @@ public class Titular{
 	        this.rh = rh2;
 	        this.es_donante = es_donante2;
 	    }
-
-
-	public int getDni() {
-		return dni;
-	}
-
-	public void setDni(int dni) {
-		this.dni = dni;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getApellido() {
-		return apellido;
-	}
-
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
-	}
-
-	public Date getFecha_nacimiento() {
-		return fecha_nacimiento;
-	}
-
-	public void setFecha_nacimiento(Date fecha_nacimiento) {
-		this.fecha_nacimiento = fecha_nacimiento;
-	}
-
-	public String getCalle() {
-		return calle;
-	}
-
-	public void setCalle(String calle) {
-		this.calle = calle;
-	}
-
-	public int getNro_casa() {
-		return nro_casa;
-	}
-
-	public void setNro_casa(int nro_casa) {
-		this.nro_casa = nro_casa;
-	}
-
-	public String getGrupo_sanguineo() {
-		return grupo_sanguineo;
-	}
-
-	public void setGrupo_sanguineo(String grupo_sanguineo) {
-		this.grupo_sanguineo = grupo_sanguineo;
-	}
-
-	public String getRh() {
-		return rh;
-	}
-
-	public void setRh(String rh) {
-		this.rh = rh;
-	}
-
-	public String getEs_donante() {
-		return es_donante;
-	}
-
-	public void setEs_donante(String es_donante) {
-		this.es_donante = es_donante;
-	}
-	
 	
 	public int getEdad() {
 		
