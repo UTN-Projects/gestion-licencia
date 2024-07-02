@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-public class InterfazLicenciasExpiradas extends JFrame {
+public class InterfazLicenciasVigentes extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -28,10 +28,10 @@ public class InterfazLicenciasExpiradas extends JFrame {
 	private Set<Licencia> licencias;
 
 
-	public InterfazLicenciasExpiradas() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazLicenciasExpiradas.class.getResource("/imagenes/Escudo_Argentina.png")));
+	public InterfazLicenciasVigentes() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazLicenciasVigentes.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
-		setTitle("Licencias Expiradas");
+		setTitle("Licencias Vigentes");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 300, 600, 450);
 		
@@ -124,11 +124,11 @@ public class InterfazLicenciasExpiradas extends JFrame {
         DefaultTableModel tableModel = new DefaultTableModel(
                 new Object[][]{},
                 new String[] {
-                        "DNI", "NOMBRE", "APELLIDO", "TIPO DE LICENCIA", "CADUCIDAD"
+                        "DNI", "NOMBRE", "APELLIDO","CLASE", "TIPO", "SANGRE", "DONANTE", "CADUCIDAD"
                 }
         );
 
-        licencias = DBManager.getInstance().recuperarLicenciasVencidas().stream()
+        licencias = DBManager.getInstance().recuperarLicenciasVigentes().stream()
                 .sorted(Comparator.comparingInt(licencia -> licencia.getTitular().getDni()))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
@@ -137,7 +137,10 @@ public class InterfazLicenciasExpiradas extends JFrame {
                     licencia.getTitular().getDni(),
                     licencia.getNombreTitular(),
                     licencia.getApellidoTitular(),
+                    licencia.getClase(),
                     licencia.getTipo(),
+                    licencia.getGrupoSangTitular().toString()+licencia.getRhTitular(),
+                    licencia.isEsDonanteTitular(),
                     licencia.getFechaVencimiento()
         });
         });
@@ -179,11 +182,15 @@ public class InterfazLicenciasExpiradas extends JFrame {
 		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
 
                         licenciasFiltered.forEach(licencia -> model.addRow(new Object[]{
-                        licencia.getTitular().getDni(),
-                        licencia.getNombreTitular(),
-                        licencia.getApellidoTitular(),
-                        licencia.getTipo(),
-                        licencia.getFechaVencimiento()}));
+                                licencia.getTitular().getDni(),
+                                licencia.getNombreTitular(),
+                                licencia.getApellidoTitular(),
+                                licencia.getClase(),
+                                licencia.getTipo(),
+                                licencia.getGrupoSangTitular().toString()+licencia.getRhTitular(),
+                                licencia.isEsDonanteTitular(),
+                                licencia.getFechaVencimiento()
+                        }));
 
 		    } else {
 		        // Mostrar mensaje de que no se encontró el titular
@@ -196,7 +203,4 @@ public class InterfazLicenciasExpiradas extends JFrame {
 	 public void cerrarInterfaz() {
 	        dispose(); 
 	    }
-
-
-	
 }

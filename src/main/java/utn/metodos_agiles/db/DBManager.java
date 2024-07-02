@@ -70,7 +70,15 @@ public class DBManager {
 	}
 
     public List<Licencia> recuperarLicenciasVencidas() {
-        List<Licencia> licencias =  entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.fechaVencimiento < ?1")
+        List<Licencia> licencias =  entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.fechaVencimiento <= ?1")
+                .setParameter(1, LocalDate.now())
+                .getResultList();
+
+        return licencias;
+    }
+
+    public List<Licencia> recuperarLicenciasVigentes() {
+        List<Licencia> licencias =  entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.fechaVencimiento > ?1")
                 .setParameter(1, LocalDate.now())
                 .getResultList();
 
