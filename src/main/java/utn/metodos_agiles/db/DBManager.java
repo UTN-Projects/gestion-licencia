@@ -486,8 +486,8 @@ public class DBManager {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         
-        String sql = "SELECT id FROM licencia WHERE dni_titular = " + dni_titular + " AND clase = "
-        		+ clase +" AND vigente = 'si'";
+        String sql = "SELECT id_licencia FROM licencia WHERE dni_titular = " + dni_titular + " AND clase = '"
+        		+ clase +"' AND vigente = 'si'";
         int id = -1;
         try {
         	int i = 0;
@@ -495,7 +495,8 @@ public class DBManager {
 			conn = DriverManager.getConnection(url, user, pass);
 			Statement st = conn.createStatement();
 			rs = st.executeQuery(sql);
-			id = rs.getInt("id");
+			rs.next();
+			id = rs.getInt("id_licencia");
 			st.close();
 			conn.close();
 		} catch(ClassNotFoundException e1) {
@@ -503,7 +504,6 @@ public class DBManager {
 		} catch(SQLException e2) {
 			e2.printStackTrace();
 		}
-        
         return id;
 	}
 		
