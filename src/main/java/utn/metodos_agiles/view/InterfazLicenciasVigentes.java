@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.text.AbstractDocument;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -25,7 +26,7 @@ public class InterfazLicenciasVigentes extends JFrame {
 	private JTextField txtDni;
 	private JTable tablaDatos;
 	private JTextField textoObs;
-	private Set<Licencia> licencias;
+	private List<Licencia> licencias;
 
 
 	public InterfazLicenciasVigentes() {
@@ -121,30 +122,12 @@ public class InterfazLicenciasVigentes extends JFrame {
         resultadoBusqueda.add(scrollPane);
         
         tablaDatos = new JTable();
-        DefaultTableModel tableModel = new DefaultTableModel(
-                new Object[][]{},
-                new String[] {
-                        "DNI", "NOMBRE", "APELLIDO","CLASE", "TIPO", "SANGRE", "DONANTE", "CADUCIDAD"
-                }
-        );
 
         licencias = DBManager.getInstance().recuperarLicenciasVigentes().stream()
                 .sorted(Comparator.comparingInt(licencia -> licencia.getTitular().getDni()))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .toList();
 
-        licencias.forEach(licencia -> {
-            tableModel.addRow(new Object[]{
-                    licencia.getTitular().getDni(),
-                    licencia.getNombreTitular(),
-                    licencia.getApellidoTitular(),
-                    licencia.getClase(),
-                    licencia.getTipo(),
-                    licencia.getGrupoSangTitular().toString()+licencia.getRhTitular(),
-                    licencia.isEsDonanteTitular(),
-                    licencia.getFechaVencimiento()
-        });
-        });
-
+        TableModel tableModel = new LicenciasVigentesTableModel(licencias);
         tablaDatos.setModel(tableModel);
         scrollPane.setViewportView(tablaDatos);
         
@@ -169,34 +152,37 @@ public class InterfazLicenciasVigentes extends JFrame {
         btnCancelarTxt.setBounds(0, 0, 96, 23);
         btnCancelar.add(btnCancelarTxt);
 
+        JPanel btnRenovar = new JPanel();
+        btnRenovar.setBackground(new Color(69, 69, 69));
+        btnRenovar.setBounds(480, 377, 96, 23);
+        contentPane.add(btnRenovar);
+        btnRenovar.setLayout(null);
+
+        JLabel btnRenovarTxt = new JLabel("Renovar");
+        JFrame renovarLicencia = new RenovarLicencia();
+        btnRenovarTxt.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                renovarLicencia.setVisible(true);
+            }
+        });
+        btnRenovarTxt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnRenovarTxt.setForeground(new Color(255, 255, 255));
+        btnRenovarTxt.setHorizontalAlignment(SwingConstants.CENTER);
+        btnRenovarTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        btnRenovarTxt.setBounds(0, 0, 96, 23);
+        btnRenovar.add(btnRenovarTxt);
+
     }
 	
 	
 	private void buscarLicencias() {
-		 
 		Integer dni = txtDni.getText().isEmpty()? null : Integer.parseInt(txtDni.getText());
         List<Licencia> licenciasFiltered = licencias.stream().filter(licencia -> dni == null || licencia.getTitular().getDni() == dni).toList();
 
-		    if (!licenciasFiltered.isEmpty()) {
-		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
-
-                        licenciasFiltered.forEach(licencia -> model.addRow(new Object[]{
-                                licencia.getTitular().getDni(),
-                                licencia.getNombreTitular(),
-                                licencia.getApellidoTitular(),
-                                licencia.getClase(),
-                                licencia.getTipo(),
-                                licencia.getGrupoSangTitular().toString()+licencia.getRhTitular(),
-                                licencia.isEsDonanteTitular(),
-                                licencia.getFechaVencimiento()
-                        }));
-
-		    } else {
-		        // Mostrar mensaje de que no se encontró el titular
-		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-		        model.setRowCount(0); // Limpiar la tabla si no se encontró el titular
-		        model.addRow(new Object[]{"No encontrado", "", ""});
+        tablaDatos.setModel(new LicenciasVigentesTableModel(licenciasFiltered));
+		    if (licenciasFiltered.isEmpty()) {
+                //todo: show dialog "Licencia no encontrada"
 		    }
 	}
 	
