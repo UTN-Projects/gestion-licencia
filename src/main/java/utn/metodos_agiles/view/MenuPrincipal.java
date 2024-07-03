@@ -32,6 +32,7 @@ public class MenuPrincipal extends JFrame {
 	private InterfazFormulario interfazForms = null;
 	private InterfazGuardarTitular interfazFormTitular = null;
 	private InterfazLicenciasExpiradas interfazLicenciasExpiradas = null;
+	private InterfazEmitirCopia interfazEmitirCopia = null;
 	private JTextField fieldUsuario;
 	private JPasswordField fieldContra;
 		
@@ -88,7 +89,7 @@ public class MenuPrincipal extends JFrame {
 		separatorUsuario.setBounds(20, 219, 269, 20);
 		panelDatosLogin.add(separatorUsuario);
 		
-		JLabel txtContrasenia = new JLabel("Contraseña");
+		JLabel txtContrasenia = new JLabel("Contrase�a");
 		txtContrasenia.setForeground(new Color(69, 69, 69));
 		txtContrasenia.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		txtContrasenia.setBounds(20, 250, 239, 26);
@@ -204,6 +205,14 @@ public class MenuPrincipal extends JFrame {
 			btnLicenciasExpiradas.setBounds(390, 53, 145, 28);
 			funcionalidades.add(btnLicenciasExpiradas);
 			btnLicenciasExpiradas.setLayout(null);
+			
+			JPanel btnEmitirCopia = new JPanel();
+			btnEmitirCopia.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			btnEmitirCopia.setBackground(new Color(69, 69, 69));
+			btnEmitirCopia.setBounds(10, 93, 145, 28);
+			funcionalidades.add(btnEmitirCopia);
+			btnEmitirCopia.setLayout(null);
+			
 
 			 JLabel textoBtnEmitirLicencia = new JLabel("Emitir licencia");
 			 textoBtnEmitirLicencia.addMouseListener(new MouseAdapter() {
@@ -267,6 +276,28 @@ public class MenuPrincipal extends JFrame {
 
 				}
 			});
+			
+			JLabel textoBtnEmitirCopia = new JLabel("Emitir Copia");
+			textoBtnEmitirCopia.addMouseListener(new MouseAdapter() {
+			 	@Override
+			 	public void mouseClicked(MouseEvent e) {
+			 		
+			 		if (interfazEmitirCopia == null) {
+			 			interfazEmitirCopia = new InterfazEmitirCopia();
+			 			interfazEmitirCopia.setVisible(true);
+			 			interfazEmitirCopia.addWindowListener(new WindowAdapter() {
+	                        @Override
+	                        public void windowClosed(WindowEvent e) {
+	                        	interfazEmitirCopia = null; // Establecer la referencia a null cuando se cierre la ventana
+	                        }
+	                    });
+	                } else {
+	                	interfazEmitirCopia.toFront(); // trae la ventana al frente si ya está abierta
+	                }
+	
+			 	}
+			 });
+			
 			 textoBtnEmitirLicencia.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 			 textoBtnEmitirLicencia.setForeground(new Color(255, 255, 255));
 			 textoBtnEmitirLicencia.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -287,6 +318,13 @@ public class MenuPrincipal extends JFrame {
 			textoBtnLicenciasExpiradas.setHorizontalAlignment(SwingConstants.CENTER);
 			textoBtnLicenciasExpiradas.setBounds(0, 0, 145, 28);
 			btnLicenciasExpiradas.add(textoBtnLicenciasExpiradas);
+			
+			textoBtnEmitirCopia.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			textoBtnEmitirCopia.setForeground(new Color(255, 255, 255));
+			textoBtnEmitirCopia.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			textoBtnEmitirCopia.setHorizontalAlignment(SwingConstants.CENTER);
+			textoBtnEmitirCopia.setBounds(0, 0, 145, 28);
+			btnEmitirCopia.add(textoBtnEmitirCopia);
 	
 	}
 }
