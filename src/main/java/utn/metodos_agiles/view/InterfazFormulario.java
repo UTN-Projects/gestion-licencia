@@ -11,9 +11,12 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import entidades.Licencia;
-import entidades.Titular;
+import utn.metodos_agiles.entidades.ClaseLicencia;
+import utn.metodos_agiles.entidades.Licencia;
+import utn.metodos_agiles.entidades.TipoLicencia;
+import utn.metodos_agiles.entidades.Titular;
 import utn.metodos_agiles.db.DBManager;
+import utn.metodos_agiles.util.VigenciaCalculator;
 
 import javax.swing.JTable;
 import java.awt.Toolkit;
@@ -24,7 +27,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
@@ -214,7 +217,7 @@ public class InterfazFormulario extends JFrame {
         	public void mouseClicked(MouseEvent e) {
         		
         		licencia = emitirLicencia(titular);
-        		DBManager.cargarLicencia(licencia);
+        		DBManager.getInstance().cargarLicencia(licencia);
         		abrirMensajeExitoso();
         		
         		
@@ -235,7 +238,7 @@ public class InterfazFormulario extends JFrame {
 	private Titular buscarTitular() {
 		 
 		int dni = Integer.parseInt(txtDni.getText());
-		    Titular titular = DBManager.buscarPorDni(dni);
+		    Titular titular = DBManager.getInstance().buscarPorDni(dni);
 		    if (titular != null) {
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
 		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
@@ -257,7 +260,7 @@ public class InterfazFormulario extends JFrame {
 		comboBoxClase.removeAllItems();
 		 
 			int edad = titular.getEdad();
-		    Set<String> licenciasPoseidas = titular.getLicencias();
+		    List<ClaseLicencia> licenciasPoseidas = DBManager.getInstance().recuperarClasesLicencias(titular.getDni());
 		    
 		    
 		    if (edad >= 17) {
@@ -271,13 +274,15 @@ public class InterfazFormulario extends JFrame {
 		        
 		    	if (edad >= 65) {
 		    		
-		    		if (licenciasPoseidas.contains("C") || licenciasPoseidas.contains("D") || licenciasPoseidas.contains("E")) {
+		    		if (licenciasPoseidas.contains(ClaseLicencia.C)
+                            || licenciasPoseidas.contains(ClaseLicencia.D)
+                            || licenciasPoseidas.contains(ClaseLicencia.E)) {
 			            comboBoxClase.addItem("C");
 			            comboBoxClase.addItem("D");
 			            comboBoxClase.addItem("E");
 		    			}
 		    	}else {
-		    		if (licenciasPoseidas.contains("B") && titular.tiempoLicencias() >= 1) {
+		    		if (licenciasPoseidas.contains(ClaseLicencia.B) && titular.tiempoLicencias() >= 1) {
 		    			comboBoxClase.addItem("C");
 		    			comboBoxClase.addItem("D");
 		    			comboBoxClase.addItem("E");
@@ -298,23 +303,25 @@ public class InterfazFormulario extends JFrame {
 	    LocalDate fechaEmisionLocal = LocalDate.now();
 	    Date fechaEmision = Date.valueOf(fechaEmisionLocal);
 
+        int cantLic = DBManager.getInstance().cantLicTitular(titular.getDni());
+
         return Licencia.builder()
-                .dni_titular(titular.getDni())
-                .nombre_titular(titular.getNombre())
-                .apellido_titular(titular.getApellido())
-                .fecha_nac_titular(titular.getFecha_nacimiento())
-                .calle_titular(titular.getCalle())
-                .nro_casa_titular(titular.getNro_casa())
-                .clase(claseSeleccionada)
-                .tipo("original")
-                .grupo_sang_titular(titular.getGrupo_sanguineo())
-                .rh_titular(titular.getRh())
-                .es_donante_titular(titular.getEs_donante())
+                .titular(titular)
+                .nombreTitular(titular.getNombre())
+                .apellidoTitular(titular.getApellido())
+                .fechaNacTitular(titular.getFechaNacimiento())
+                .calleTitular(titular.getCalle())
+                .nroCasaTitular(titular.getNroCasa())
+                .clase(ClaseLicencia.valueOf(claseSeleccionada))
+                .tipo(TipoLicencia.ORIGINAL)
+                .grupoSangTitular(titular.getGrupoSanguineo())
+                .rhTitular(titular.getRh())
+                .esDonanteTitular(titular.getEsDonante())
                 .observaciones(observaciones)
-                .fecha_emision(fechaEmision)
+                .fechaEmision(fechaEmision)
                 .administrador("Juan Perez")
-                .vigente("si")
-                .fecha_vencimiento(Licencia.calcularVigencia(titular))
+                .vigente(true)
+                .fechaVencimiento(VigenciaCalculator.calcularVigencia(titular.getEdad(), cantLic))
                 .build();
 	}
 	

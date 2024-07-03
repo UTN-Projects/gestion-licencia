@@ -11,12 +11,10 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import entidades.Contribuyente;
-import entidades.Licencia;
-import entidades.Titular;
+import entidades.*;
 import utn.metodos_agiles.db.DBManager;
-import utn.metodos_agiles.view.InterfazFormulario;
-import utn.metodos_agiles.view.MensajeExitoso;
+import utn.metodos_agiles.entidades.*;
+import utn.metodos_agiles.util.VigenciaCalculator;
 
 import javax.swing.JTable;
 import java.awt.Toolkit;
@@ -149,8 +147,8 @@ public class InterfazGenerarLicenciaContribuyente extends JFrame {
         	public void mouseClicked(MouseEvent e) {
         		
         		licencia = emitirLicencia(contribuyente);
-                DBManager.guardarTitular(contribuyente);
-        		DBManager.cargarLicencia(licencia);
+                DBManager.getInstance().guardarTitular(Titular.of(contribuyente));
+        		DBManager.getInstance().cargarLicencia(licencia);
         		abrirMensajeExitoso();
         		
         		
@@ -178,23 +176,27 @@ public class InterfazGenerarLicenciaContribuyente extends JFrame {
 	    LocalDate fechaEmisionLocal = LocalDate.now();
 	    Date fechaEmision = Date.valueOf(fechaEmisionLocal);
 
+        int cantLic = DBManager.getInstance().cantLicTitular(contribuyente.getDni());
+
         return Licencia.builder()
-                .dni_titular(contribuyente.getDni())
-                .nombre_titular(contribuyente.getNombre())
-                .apellido_titular(contribuyente.getApellido())
-                .fecha_nac_titular(contribuyente.getFecha_nacimiento())
-                .calle_titular(contribuyente.getCalle())
-                .nro_casa_titular(contribuyente.getNro_casa())
-                .clase(claseSeleccionada)
-                .tipo("original")
-                .grupo_sang_titular(contribuyente.getGrupo_sanguineo())
-                .rh_titular(contribuyente.getRh())
-                .es_donante_titular(contribuyente.getEs_donante())
+                .titular(Titular.builder()
+                        .dni(contribuyente.getDni())
+                        .build())
+                .nombreTitular(contribuyente.getNombre())
+                .apellidoTitular(contribuyente.getApellido())
+                .fechaNacTitular(contribuyente.getFechaNacimiento())
+                .calleTitular(contribuyente.getCalle())
+                .nroCasaTitular(contribuyente.getNroCasa())
+                .clase(ClaseLicencia.valueOf(claseSeleccionada))
+                .tipo(TipoLicencia.ORIGINAL)
+                .grupoSangTitular(contribuyente.getGrupoSanguineo())
+                .rhTitular(contribuyente.getRh())
+                .esDonanteTitular(contribuyente.getEsDonante())
                 .observaciones(observaciones)
-                .fecha_emision(fechaEmision)
+                .fechaEmision(fechaEmision)
                 .administrador("Juan Perez")
-                .vigente("si")
-                .fecha_vencimiento(Licencia.calcularVigencia(contribuyente))
+                .vigente(true)
+                .fechaVencimiento(VigenciaCalculator.calcularVigencia(contribuyente.getEdad(), cantLic))
                 .build();
 	}
 	

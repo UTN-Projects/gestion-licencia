@@ -11,8 +11,8 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import entidades.Licencia;
-import entidades.Titular;
+import utn.metodos_agiles.entidades.Licencia;
+import utn.metodos_agiles.entidades.Titular;
 import utn.metodos_agiles.db.DBManager;
 import utn.metodos_agiles.model.ClientDto;
 import utn.metodos_agiles.model.LicenciaDto;
@@ -239,7 +239,7 @@ public class InterfazEmitirCopia extends JFrame {
 		    if (titular != null) {
 		    	licencias = DBManager.cargarLicenciasTitular(dni);
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
+		        model.setRowCount(0); // Limpiar la tabla antes de aï¿½adir nuevos datos
 		        for(int i = 0; i < 3; i++) {
 		        	if(licencias[i] != null) {
 		        		model.addRow(new Object[]{licencias[i].getClase(), licencias[i].getTipo(), 
@@ -247,9 +247,9 @@ public class InterfazEmitirCopia extends JFrame {
 		        	}
 		        }
 		    } else {
-		        // Mostrar mensaje de que no se encontró el titular
+		        // Mostrar mensaje de que no se encontrï¿½ el titular
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-		        model.setRowCount(0); // Limpiar la tabla si no se encontró el titular
+		        model.setRowCount(0); // Limpiar la tabla si no se encontrï¿½ el titular
 		        model.addRow(new Object[]{"No encontrado", "", ""});
 		        return null;
 		    }
@@ -318,7 +318,7 @@ public class InterfazEmitirCopia extends JFrame {
 			licencia.setTipo("octoplicado");
 			break;
 		default:
-			licencia.setTipo("tantas vas a perder?"); //en realidad no sé como se dice la novena copia
+			licencia.setTipo("tantas vas a perder?"); //en realidad no sï¿½ como se dice la novena copia
 			break;
 		}
 		return licencia;
