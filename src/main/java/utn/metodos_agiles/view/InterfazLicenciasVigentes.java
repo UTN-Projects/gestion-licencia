@@ -1,6 +1,6 @@
 package utn.metodos_agiles.view;
 
-import entidades.Licencia;
+import utn.metodos_agiles.entidades.Licencia;
 import utn.metodos_agiles.db.DBManager;
 
 import javax.swing.*;

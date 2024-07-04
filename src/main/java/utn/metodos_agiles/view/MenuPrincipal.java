@@ -31,7 +31,8 @@ public class MenuPrincipal extends JFrame {
 	private JPanel contenidoMenu;
 	private InterfazFormulario interfazForms = null;
 	private InterfazGuardarTitular interfazFormTitular = null;
-	private InterfazLicenciasExpiradas frame = null;
+	private InterfazLicenciasExpiradas interfazLicenciasExpiradas = null;
+	private InterfazEmitirCopia interfazEmitirCopia = null;
 	private JTextField fieldUsuario;
 	private JPasswordField fieldContra;
 		
@@ -186,10 +187,11 @@ public class MenuPrincipal extends JFrame {
 
 
 		funcionalidades.add(boton("Emitir Licencia", new InterfazFormulario(),10, 53));
-		funcionalidades.add(boton("Guardar Titular", new InterfazGuardarTitular(), 200, 53));
-		funcionalidades.add(boton("Licencias Expiradas", new InterfazLicenciasExpiradas(), 390, 53));
+		funcionalidades.add(boton("Emitir Copia", new InterfazEmitirCopia(), 200, 53));
+		funcionalidades.add(boton("Guardar Titular", new InterfazGuardarTitular(), 390, 53));
 		funcionalidades.add(boton("Licencias Vigentes", new InterfazLicenciasVigentes(), 10, 90));
-	}
+        funcionalidades.add(boton("Licencias Expiradas", new InterfazLicenciasExpiradas(), 200, 90));
+    }
 
 	private JPanel boton(String label, JFrame frame, int x, int y) {
 		JPanel btn = new JPanel();

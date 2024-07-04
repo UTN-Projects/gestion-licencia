@@ -1,4 +1,4 @@
-package entidades;
+package utn.metodos_agiles.entidades;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,7 +44,7 @@ public class Licencia {
 	@Enumerated(EnumType.STRING)
 	private ClaseLicencia clase;
 
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private TipoLicencia tipo;
 
 	@Enumerated(EnumType.STRING)

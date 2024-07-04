@@ -1,10 +1,8 @@
-package entidades;
+package utn.metodos_agiles.entidades;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.sql.Date;
-import java.util.List;
-import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.*;
