@@ -44,7 +44,7 @@ public class Licencia {
 	@Enumerated(EnumType.STRING)
 	private ClaseLicencia clase;
 
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private TipoLicencia tipo;
 
 	@Enumerated(EnumType.STRING)

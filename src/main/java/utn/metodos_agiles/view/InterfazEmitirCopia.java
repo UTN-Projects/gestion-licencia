@@ -11,7 +11,9 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import utn.metodos_agiles.entidades.ClaseLicencia;
 import utn.metodos_agiles.entidades.Licencia;
+import utn.metodos_agiles.entidades.TipoLicencia;
 import utn.metodos_agiles.entidades.Titular;
 import utn.metodos_agiles.db.DBManager;
 import utn.metodos_agiles.model.ClientDto;
@@ -19,6 +21,7 @@ import utn.metodos_agiles.model.LicenciaDto;
 import utn.metodos_agiles.model.FacturaItem;
 import utn.metodos_agiles.util.LicenciaGenerator;
 import utn.metodos_agiles.util.FacturaGenerator;
+import utn.metodos_agiles.util.VigenciaCalculator;
 
 import javax.swing.JTable;
 import java.awt.Toolkit;
@@ -50,7 +53,7 @@ public class InterfazEmitirCopia extends JFrame {
 	private JTextField textoObs;
 	private Titular titular;
 	private Licencia licencia;
-	private Licencia[] licencias = new Licencia[3];
+	private List<Licencia> licencias;
 	private MensajeExitoso mensajeExitoso;
 	private JLabel nombreTitular;
 
@@ -204,9 +207,9 @@ public class InterfazEmitirCopia extends JFrame {
         		
         		if(tablaDatos.getSelectedRow() != -1) {
         			//Generar copia y guardarla
-        			if(licencias[tablaDatos.getSelectedRow()] != null) {
+        			if(licencias.get(tablaDatos.getSelectedRow()) != null) {
         				licencia = emitirCopia(tablaDatos.getSelectedRow());
-        				DBManager.cargarLicencia(licencia);
+        				DBManager.getInstance().cargarLicencia(licencia);
         				//imprimirLicencia();
         				//imprimirFactura();
         				abrirMensajeExitoso();
@@ -235,15 +238,15 @@ public class InterfazEmitirCopia extends JFrame {
 	private Titular buscarTitular() {
 		 
 		int dni = Integer.parseInt(txtDni.getText());
-		    Titular titular = DBManager.buscarPorDni(dni);
+		    Titular titular = DBManager.getInstance().buscarPorDni(dni);
 		    if (titular != null) {
-		    	licencias = DBManager.cargarLicenciasTitular(dni);
+		    	licencias = DBManager.getInstance().cargarLicenciasTitular(dni);
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
 		        model.setRowCount(0); // Limpiar la tabla antes de a�adir nuevos datos
-		        for(int i = 0; i < 3; i++) {
-		        	if(licencias[i] != null) {
-		        		model.addRow(new Object[]{licencias[i].getClase(), licencias[i].getTipo(), 
-		        				licencias[i].getFecha_vencimiento()});
+		        for(int i = 0; i < licencias.size(); i++) {
+		        	if(licencias.get(i) != null) {
+		        		model.addRow(new Object[]{licencias.get(i).getClase(), licencias.get(i).getTipo(),
+		        				licencias.get(i).getFechaVencimiento()});
 		        	}
 		        }
 		    } else {
@@ -263,7 +266,7 @@ public class InterfazEmitirCopia extends JFrame {
 		comboBoxClase.removeAllItems();
 		 
 			int edad = titular.getEdad();
-		    Set<String> licenciasPoseidas = titular.getLicencias();
+		    List<ClaseLicencia> licenciasPoseidas = DBManager.getInstance().recuperarClasesLicencias(titular.getDni());
 		    
 		    
 		    if (edad >= 17) {
@@ -277,13 +280,15 @@ public class InterfazEmitirCopia extends JFrame {
 		        
 		    	if (edad >= 65) {
 		    		
-		    		if (licenciasPoseidas.contains("C") || licenciasPoseidas.contains("D") || licenciasPoseidas.contains("E")) {
+		    		if (licenciasPoseidas.contains(ClaseLicencia.C)
+							|| licenciasPoseidas.contains(ClaseLicencia.D)
+							|| licenciasPoseidas.contains(ClaseLicencia.E)) {
 			            comboBoxClase.addItem("C");
 			            comboBoxClase.addItem("D");
 			            comboBoxClase.addItem("E");
 		    			}
 		    	}else {
-		    		if (licenciasPoseidas.contains("B") && titular.tiempoLicencias() >= 1) {
+		    		if (licenciasPoseidas.contains(ClaseLicencia.B) && titular.tiempoLicencias() >= 1) {
 		    			comboBoxClase.addItem("C");
 		    			comboBoxClase.addItem("D");
 		    			comboBoxClase.addItem("E");
@@ -294,33 +299,10 @@ public class InterfazEmitirCopia extends JFrame {
 	}
 	
 	private Licencia emitirCopia(int i) {
-		Licencia licencia = licencias[i];
-		switch(licencia.getTipo()) {
-		case "original":
-			licencia.setTipo("duplicado");
-			break;
-		case "duplicado":
-			licencia.setTipo("triplicado");
-			break;
-		case "triplicado":
-			licencia.setTipo("cuadriplicado");
-			break;
-		case "cuadriplicado":
-			licencia.setTipo("quintuplicado");
-			break;
-		case "quintuplicado":
-			licencia.setTipo("sextuplicado");
-			break;
-		case "sextuplicado":
-			licencia.setTipo("septuplicado");
-			break;
-		case "septuplicado":
-			licencia.setTipo("octoplicado");
-			break;
-		default:
-			licencia.setTipo("tantas vas a perder?"); //en realidad no s� como se dice la novena copia
-			break;
-		}
+		Licencia licencia = licencias.get(i);
+
+		licencia.setTipo(TipoLicencia.fromNumber(licencia.getTipo().toNumber() + 1));
+
 		return licencia;
 	}
 	
@@ -335,22 +317,23 @@ public class InterfazEmitirCopia extends JFrame {
 	    Date fechaEmision = Date.valueOf(fechaEmisionLocal);
 
         return Licencia.builder()
-                .dni_titular(titular.getDni())
-                .nombre_titular(titular.getNombre())
-                .apellido_titular(titular.getApellido())
-                .fecha_nac_titular(titular.getFecha_nacimiento())
-                .calle_titular(titular.getCalle())
-                .nro_casa_titular(titular.getNro_casa())
-                .clase(claseSeleccionada)
-                .tipo("original")
-                .grupo_sang_titular(titular.getGrupo_sanguineo())
-                .rh_titular(titular.getRh())
-                .es_donante_titular(titular.getEs_donante())
+                .titular(titular)
+                .nombreTitular(titular.getNombre())
+                .apellidoTitular(titular.getApellido())
+                .fechaNacTitular(titular.getFechaNacimiento())
+                .calleTitular(titular.getCalle())
+                .nroCasaTitular(titular.getNroCasa())
+                .clase(ClaseLicencia.valueOf(claseSeleccionada))
+                .tipo(TipoLicencia.ORIGINAL)
+                .grupoSangTitular(titular.getGrupoSanguineo())
+                .rhTitular(titular.getRh())
+                .esDonanteTitular(titular.getEsDonante())
                 .observaciones(observaciones)
-                .fecha_emision(fechaEmision)
+                .fechaEmision(fechaEmision)
                 .administrador("Juan Perez")
-                .vigente("si")
-                .fecha_vencimiento(Licencia.calcularVigencia(titular))
+                .vigente(true)
+                .fechaVencimiento(VigenciaCalculator
+						.calcularVigencia(titular.getEdad(), DBManager.getInstance().cantLicTitular(titular.getDni())))
                 .build();
 	}
 	
@@ -371,36 +354,32 @@ public class InterfazEmitirCopia extends JFrame {
 	}
 	
 	private void imprimirLicencia() {
-		Boolean d;
-		if(licencia.getEs_donante_titular() == "si") d = true; 
-		else d = false;
-		LicenciaDto l = LicenciaDto.builder().number("" + DBManager.IDLicencia(licencia.getDni_titular(), 
-						licencia.getClase()))
-				.lastname(licencia.getApellido_titular()).name(licencia.getNombre_titular())
-				.address(licencia.getCalle_titular() + " " + licencia.getNro_casa_titular())
-				.birth(licencia.getFecha_nac_titular().getDay() + 
-						LicenciaDto.traductorMes(licencia.getFecha_nac_titular().getMonth()) +
-						licencia.getFecha_nac_titular().getYear())
-				.emition(licencia.getFecha_emision().getDay() + 
-						LicenciaDto.traductorMes(licencia.getFecha_emision().getMonth()) +
-						licencia.getFecha_emision().getYear())
-				.expiration(licencia.getFecha_vencimiento().getDay() + 
-						LicenciaDto.traductorMes(licencia.getFecha_vencimiento().getMonth()) +
-						licencia.getFecha_vencimiento().getYear())
-				.isDonor(d).bloodType(licencia.getGrupo_sang_titular() + licencia.getRh_titular())
-				.cuil("" + licencia.getDni_titular()).observations(licencia.getObservaciones())
-				.type(licencia.getTipo()).build();
+		LicenciaDto l = LicenciaDto.builder()
+				.number("" + DBManager.getInstance().IDLicencia(licencia.getTitular().getDni(), licencia.getClase()))
+				.lastname(licencia.getTitular().getApellido())
+				.name(licencia.getTitular().getNombre())
+				.address(licencia.getCalleTitular() + " " + licencia.getNroCasaTitular())
+				.birth(licencia.getFechaNacTitular().getDay() +
+						LicenciaDto.traductorMes(licencia.getFechaNacTitular().getMonth()) +
+						licencia.getFechaNacTitular().getYear())
+				.emition(licencia.getFechaEmision().getDay() +
+						LicenciaDto.traductorMes(licencia.getFechaEmision().getMonth()) +
+						licencia.getFechaEmision().getYear())
+				.expiration(licencia.getFechaVencimiento().getDay() +
+						LicenciaDto.traductorMes(licencia.getFechaVencimiento().getMonth()) +
+						licencia.getFechaVencimiento().getYear())
+				.isDonor(licencia.isEsDonanteTitular()).bloodType(licencia.getGrupoSangTitular().toString() + licencia.getRhTitular())
+				.cuil("" + licencia.getTitular().getDni()).observations(licencia.getObservaciones())
+				.type(licencia.getTipo().toString()).build();
 		LicenciaGenerator.generar(l, "", "");
 	}
 	
 	private void imprimirFactura() {
 		ClientDto c = ClientDto.builder().name(titular.getNombre() + " " + titular.getApellido())
-				.address(titular.getCalle() + " " + titular.getNro_casa()).dni("" + titular.getDni()).build();
+				.address(titular.getCalle() + " " + titular.getNroCasa()).dni("" + titular.getDni()).build();
 		List<FacturaItem> items = new ArrayList<FacturaItem>();
 		items.add(FacturaItem.builder().description("Licencia clase " + licencia.getClase()).value(50.0F)
 				.build());
 		FacturaGenerator.generar(c, items, "");
 	}
-	
-	
 }
