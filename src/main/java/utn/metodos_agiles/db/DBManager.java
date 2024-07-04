@@ -77,7 +77,7 @@ public class DBManager {
                 .setParameter(1, LocalDate.now())
                 .getResultList();
     }
-	
+
 	public Boolean permitidoClaseProfesional(int dni) {
         Date fechaEmision = (Date) entityManager.createQuery("SELECT licencia.fechaEmision FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND clase = 'B'")
                 .setParameter(1, dni)
@@ -99,8 +99,9 @@ public class DBManager {
 	public void cargarLicencia(Licencia licencia) {
         entityManager.getTransaction().begin();
 
-        entityManager.createQuery("UPDATE Licencia SET vigente = false WHERE titular.dni = ?1 AND vigente = true")
+        entityManager.createQuery("UPDATE Licencia SET vigente = false WHERE titular.dni = ?1 AND vigente = true AND clase =?2")
                 .setParameter(1, licencia.getTitular().getDni())
+                .setParameter(2, licencia.getClase())
                 .executeUpdate();
         entityManager.persist(licencia);
 

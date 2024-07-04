@@ -6,7 +6,6 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
 
-import javax.swing.JComboBox;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -49,8 +48,6 @@ public class InterfazEmitirCopia extends JFrame {
     private JPanel contentPane;
 	private JTextField txtDni;
 	private JTable tablaDatos;
-	private JComboBox<String> comboBoxClase;
-	private JTextField textoObs;
 	private Titular titular;
 	private Licencia licencia;
 	private List<Licencia> licencias;
@@ -127,7 +124,6 @@ public class InterfazEmitirCopia extends JFrame {
         		
         		titular = buscarTitular();  
                 if (titular != null) {
-                    //clasesDisponibles(titular);
                     nombreTitular.setText(titular.getNombre() + " " + titular.getApellido());
                 }
         		
@@ -210,8 +206,8 @@ public class InterfazEmitirCopia extends JFrame {
         			if(licencias.get(tablaDatos.getSelectedRow()) != null) {
         				licencia = emitirCopia(tablaDatos.getSelectedRow());
         				DBManager.getInstance().cargarLicencia(licencia);
-        				//imprimirLicencia();
-        				//imprimirFactura();
+        				imprimirLicencia();
+        				imprimirFactura();
         				abrirMensajeExitoso();
         			} else {
             			abrirAdvertencia();
@@ -258,46 +254,7 @@ public class InterfazEmitirCopia extends JFrame {
 		    }
 	    return titular;
 	}
-	
-	
-	private void clasesDisponibles(Titular titular) {
-		
-		//metodo usado para verificar las condiciones de cada clase de licencia y listar las que cumpla el titular
-		comboBoxClase.removeAllItems();
-		 
-			int edad = titular.getEdad();
-		    List<ClaseLicencia> licenciasPoseidas = DBManager.getInstance().recuperarClasesLicencias(titular.getDni());
-		    
-		    
-		    if (edad >= 17) {
-		        comboBoxClase.addItem("A");
-		        comboBoxClase.addItem("B");
-		        comboBoxClase.addItem("F");
-		        comboBoxClase.addItem("G");
-		    }
-		    
-		    if (edad >= 21) {
-		        
-		    	if (edad >= 65) {
-		    		
-		    		if (licenciasPoseidas.contains(ClaseLicencia.C)
-							|| licenciasPoseidas.contains(ClaseLicencia.D)
-							|| licenciasPoseidas.contains(ClaseLicencia.E)) {
-			            comboBoxClase.addItem("C");
-			            comboBoxClase.addItem("D");
-			            comboBoxClase.addItem("E");
-		    			}
-		    	}else {
-		    		if (licenciasPoseidas.contains(ClaseLicencia.B) && titular.tiempoLicencias() >= 1) {
-		    			comboBoxClase.addItem("C");
-		    			comboBoxClase.addItem("D");
-		    			comboBoxClase.addItem("E");
-		        		}
-		    		}
-		    }
-	        
-	}
-	
+
 	private Licencia emitirCopia(int i) {
 		Licencia licencia = licencias.get(i);
 
@@ -305,37 +262,7 @@ public class InterfazEmitirCopia extends JFrame {
 
 		return licencia;
 	}
-	
-	private Licencia emitirLicencia(Titular titular) {
-		
-		String claseSeleccionada = (String) comboBoxClase.getSelectedItem();
-	    
-	    
-	    String observaciones = textoObs.getText();
-	    
-	    LocalDate fechaEmisionLocal = LocalDate.now();
-	    Date fechaEmision = Date.valueOf(fechaEmisionLocal);
 
-        return Licencia.builder()
-                .titular(titular)
-                .nombreTitular(titular.getNombre())
-                .apellidoTitular(titular.getApellido())
-                .fechaNacTitular(titular.getFechaNacimiento())
-                .calleTitular(titular.getCalle())
-                .nroCasaTitular(titular.getNroCasa())
-                .clase(ClaseLicencia.valueOf(claseSeleccionada))
-                .tipo(TipoLicencia.ORIGINAL)
-                .grupoSangTitular(titular.getGrupoSanguineo())
-                .rhTitular(titular.getRh())
-                .esDonanteTitular(titular.getEsDonante())
-                .observaciones(observaciones)
-                .fechaEmision(fechaEmision)
-                .administrador("Juan Perez")
-                .vigente(true)
-                .fechaVencimiento(VigenciaCalculator
-						.calcularVigencia(titular.getEdad(), DBManager.getInstance().cantLicTitular(titular.getDni())))
-                .build();
-	}
 	
 	 public void cerrarInterfaz() {
 	        dispose(); 
@@ -354,7 +281,10 @@ public class InterfazEmitirCopia extends JFrame {
 	}
 	
 	private void imprimirLicencia() {
-		LicenciaDto l = LicenciaDto.builder()
+        String filePath = "licencia" + titular.getDni() + ".pdf";
+        String imagePath = "src/main/resources/fotos/" + titular.getDni() +".png";
+
+        LicenciaDto l = LicenciaDto.builder()
 				.number("" + DBManager.getInstance().IDLicencia(licencia.getTitular().getDni(), licencia.getClase()))
 				.lastname(licencia.getTitular().getApellido())
 				.name(licencia.getTitular().getNombre())
@@ -371,15 +301,18 @@ public class InterfazEmitirCopia extends JFrame {
 				.isDonor(licencia.isEsDonanteTitular()).bloodType(licencia.getGrupoSangTitular().toString() + licencia.getRhTitular())
 				.cuil("" + licencia.getTitular().getDni()).observations(licencia.getObservaciones())
 				.type(licencia.getTipo().toString()).build();
-		LicenciaGenerator.generar(l, "", "");
+		LicenciaGenerator.generar(l, imagePath, filePath);
 	}
 	
 	private void imprimirFactura() {
+		String filePath = "factura" + titular.getDni() + ".pdf";
 		ClientDto c = ClientDto.builder().name(titular.getNombre() + " " + titular.getApellido())
 				.address(titular.getCalle() + " " + titular.getNroCasa()).dni("" + titular.getDni()).build();
 		List<FacturaItem> items = new ArrayList<FacturaItem>();
-		items.add(FacturaItem.builder().description("Licencia clase " + licencia.getClase()).value(50.0F)
+		items.add(FacturaItem.builder().description("Copia de licencia clase " + licencia.getClase()).value(50.0F)
 				.build());
-		FacturaGenerator.generar(c, items, "");
+		FacturaGenerator.generar(c, items, filePath);
 	}
+	
+	
 }
