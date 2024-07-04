@@ -5,17 +5,22 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import utn.metodos_agiles.entidades.Contribuyente;
+import utn.metodos_agiles.entidades.ClaseLicencia;
+import utn.metodos_agiles.entidades.Licencia;
+import utn.metodos_agiles.entidades.TipoLicencia;
 import utn.metodos_agiles.entidades.Titular;
 import utn.metodos_agiles.db.DBManager;
+import utn.metodos_agiles.model.ClientDto;
+import utn.metodos_agiles.model.LicenciaDto;
+import utn.metodos_agiles.model.FacturaItem;
+import utn.metodos_agiles.util.LicenciaGenerator;
+import utn.metodos_agiles.util.FacturaGenerator;
+import utn.metodos_agiles.util.VigenciaCalculator;
 
 import javax.swing.JTable;
 import java.awt.Toolkit;
@@ -24,27 +29,35 @@ import javax.swing.SwingConstants;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Set;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.text.AbstractDocument;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class InterfazGuardarTitular extends JFrame {
+public class InterfazEmitirCopia extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-    private InterfazGenerarLicenciaContribuyente interfazLicenciaContribuyente;
-	private JPanel contentPane;
+
+    private static final String ESCUDO_ARG_PATH = "/imagenes/Escudo_Argentina.png";
+    private JPanel contentPane;
 	private JTextField txtDni;
 	private JTable tablaDatos;
-	private JTextField textoObs;
-	private Contribuyente contribuyente;
-	
+	private Titular titular;
+	private Licencia licencia;
+	private List<Licencia> licencias;
+	private MensajeExitoso mensajeExitoso;
+	private JLabel nombreTitular;
 
-	public InterfazGuardarTitular() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazGuardarTitular.class.getResource("/imagenes/Escudo_Argentina.png")));
+	public InterfazEmitirCopia() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazFormulario.class.getResource(ESCUDO_ARG_PATH)));
 		setResizable(false);
-		setTitle("Guardar Titular");
+		setTitle("Emitir licencia");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 300, 600, 450);
 		
@@ -63,7 +76,7 @@ public class InterfazGuardarTitular extends JFrame {
         datosDelTitular.setBackground(new Color(251, 203, 60));
         datosDelTitular.setBounds(10, 11, 564, 125);
         contentPane.add(datosDelTitular);
-        datosDelTitular.setBorder(new TitledBorder(new LineBorder(new Color(69, 69, 69), 2, true), "Datos del Contribuyente", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(69, 69, 69)));
+        datosDelTitular.setBorder(new TitledBorder(new LineBorder(new Color(69, 69, 69), 2, true), "Datos del Titular", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(69, 69, 69)));
         datosDelTitular.setLayout(null);
        
         
@@ -109,7 +122,11 @@ public class InterfazGuardarTitular extends JFrame {
         	@Override
         	public void mouseClicked(MouseEvent e) {
         		
-        		contribuyente = buscarContribuyente();  
+        		titular = buscarTitular();  
+                if (titular != null) {
+                    nombreTitular.setText(titular.getNombre() + " " + titular.getApellido());
+                }
+        		
         		
         	}
         });
@@ -129,18 +146,25 @@ public class InterfazGuardarTitular extends JFrame {
       
         contentPane.add(resultadoBusqueda);
         
+        nombreTitular = new JLabel("Lionel Messi", SwingConstants.CENTER);
+        nombreTitular.setForeground(new Color(45, 45, 45));
+        nombreTitular.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        nombreTitular.setBounds(0, 31, 564, 26);
+        resultadoBusqueda.add(nombreTitular);
+        nombreTitular.setText("");
+        
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(20, 41, 519, 58);
+        scrollPane.setBounds(20, 81, 519, 78);
         resultadoBusqueda.add(scrollPane);
         
         tablaDatos = new JTable();
         tablaDatos.setModel(new DefaultTableModel(
         	new Object[][] {
         		{"", null, null},
-        		
+        		{null, null, null},
         	},
         	new String[] {
-        		"DNI", "NOMBRE", "APELLIDO"
+        		"CLASE", "TIPO", "VENCIMIENTO"
         	}
         ));
         scrollPane.setViewportView(tablaDatos);
@@ -172,34 +196,25 @@ public class InterfazGuardarTitular extends JFrame {
         btnEmitir.setBounds(478, 377, 96, 23);
         contentPane.add(btnEmitir);
         
-        JLabel btnEmitirTxt = new JLabel("Guardar");
+        JLabel btnEmitirTxt = new JLabel("Emitir");
         btnEmitirTxt.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
         		
-        		if (interfazLicenciaContribuyente == null) {
-                    if(contribuyente!=null){
-                        Titular auxTitular = DBManager.getInstance().buscarPorDni(contribuyente.getDni());
-                        if(auxTitular == null){
-                            interfazLicenciaContribuyente = new InterfazGenerarLicenciaContribuyente(contribuyente);
-                            interfazLicenciaContribuyente.setVisible(true);
-                            setVisible(false);
-                            interfazLicenciaContribuyente.addWindowListener(new WindowAdapter() {
-                                @Override
-                                public void windowClosed(WindowEvent e) {
-                                    interfazLicenciaContribuyente = null; // Establecer la referencia a null cuando se cierre la ventana
-                                }
-                            });
-                        } else {
-                            abrirMensajeTitularExistente();
-                        }
-                    } else {
-                        abrirMensajeContribuyenteNoCargado();
-                    }
-                } else {
-                    interfazLicenciaContribuyente.toFront(); // trae la ventana al frente si ya está abierta
-                }
-        		cerrarInterfaz();
+        		if(tablaDatos.getSelectedRow() != -1) {
+        			//Generar copia y guardarla
+        			if(licencias.get(tablaDatos.getSelectedRow()) != null) {
+        				licencia = emitirCopia(tablaDatos.getSelectedRow());
+        				DBManager.getInstance().cargarLicencia(licencia);
+        				imprimirLicencia();
+        				imprimirFactura();
+        				abrirMensajeExitoso();
+        			} else {
+            			abrirAdvertencia();
+        			}
+        		} else {
+        			abrirAdvertencia();
+        		}
         		
         		
         	}
@@ -216,38 +231,88 @@ public class InterfazGuardarTitular extends JFrame {
 			}
 	
 	
-	private Contribuyente buscarContribuyente() {
+	private Titular buscarTitular() {
 		 
 		int dni = Integer.parseInt(txtDni.getText());
-		    Contribuyente contribuyente = DBManager.getInstance().buscarContribuyentePorDni(dni);
-		    if (contribuyente != null) {
+		    Titular titular = DBManager.getInstance().buscarPorDni(dni);
+		    if (titular != null) {
+		    	licencias = DBManager.getInstance().cargarLicenciasTitular(dni);
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
-		        model.addRow(new Object[]{contribuyente.getDni(), contribuyente.getNombre(), contribuyente.getApellido()});
+		        model.setRowCount(0); // Limpiar la tabla antes de a�adir nuevos datos
+		        for(int i = 0; i < licencias.size(); i++) {
+		        	if(licencias.get(i) != null) {
+		        		model.addRow(new Object[]{licencias.get(i).getClase(), licencias.get(i).getTipo(),
+		        				licencias.get(i).getFechaVencimiento()});
+		        	}
+		        }
 		    } else {
-		        // Mostrar mensaje de que no se encontró el titular
+		        // Mostrar mensaje de que no se encontr� el titular
 		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-		        model.setRowCount(0); // Limpiar la tabla si no se encontró el titular
+		        model.setRowCount(0); // Limpiar la tabla si no se encontr� el titular
 		        model.addRow(new Object[]{"No encontrado", "", ""});
 		        return null;
 		    }
-	    return contribuyente;
+	    return titular;
 	}
+
+	private Licencia emitirCopia(int i) {
+		Licencia licencia = licencias.get(i);
+
+		licencia.setTipo(TipoLicencia.fromNumber(licencia.getTipo().toNumber() + 1));
+
+		return licencia;
+	}
+
 	
 	 public void cerrarInterfaz() {
 	        dispose(); 
 	    }
+	
+	
+	public void abrirMensajeExitoso() {
+		MensajeCopiaExitosa mensajeExitoso = new MensajeCopiaExitosa(this);
+		mensajeExitoso.setVisible(true);
+		setVisible(false); 
+	}
+	
+	private void abrirAdvertencia() {
+		AdvertenciaElejirLicencia a = new AdvertenciaElejirLicencia();
+		a.setVisible(true);
+	}
+	
+	private void imprimirLicencia() {
+        String filePath = "licencia" + titular.getDni() + ".pdf";
+        String imagePath = "src/main/resources/fotos/" + titular.getDni() +".png";
 
-    public void abrirMensajeTitularExistente() {
-        AdvertenciaTitularExistente titularExistente = new AdvertenciaTitularExistente(this);
-        titularExistente.setVisible(true);
-        setVisible(false);
-    }
-
-    public void abrirMensajeContribuyenteNoCargado() {
-        AdvertenciaContribuyenteNoCargado contribuyenteNoCargado = new AdvertenciaContribuyenteNoCargado(this);
-        contribuyenteNoCargado.setVisible(true);
-        setVisible(false);
-    }
+        LicenciaDto l = LicenciaDto.builder()
+				.number("" + DBManager.getInstance().IDLicencia(licencia.getTitular().getDni(), licencia.getClase()))
+				.lastname(licencia.getTitular().getApellido())
+				.name(licencia.getTitular().getNombre())
+				.address(licencia.getCalleTitular() + " " + licencia.getNroCasaTitular())
+				.birth(licencia.getFechaNacTitular().getDay() +
+						LicenciaDto.traductorMes(licencia.getFechaNacTitular().getMonth()) +
+						licencia.getFechaNacTitular().getYear())
+				.emition(licencia.getFechaEmision().getDay() +
+						LicenciaDto.traductorMes(licencia.getFechaEmision().getMonth()) +
+						licencia.getFechaEmision().getYear())
+				.expiration(licencia.getFechaVencimiento().getDay() +
+						LicenciaDto.traductorMes(licencia.getFechaVencimiento().getMonth()) +
+						licencia.getFechaVencimiento().getYear())
+				.isDonor(licencia.isEsDonanteTitular()).bloodType(licencia.getGrupoSangTitular().toString() + licencia.getRhTitular())
+				.cuil("" + licencia.getTitular().getDni()).observations(licencia.getObservaciones())
+				.type(licencia.getTipo().toString()).build();
+		LicenciaGenerator.generar(l, imagePath, filePath);
+	}
+	
+	private void imprimirFactura() {
+		String filePath = "factura" + titular.getDni() + ".pdf";
+		ClientDto c = ClientDto.builder().name(titular.getNombre() + " " + titular.getApellido())
+				.address(titular.getCalle() + " " + titular.getNroCasa()).dni("" + titular.getDni()).build();
+		List<FacturaItem> items = new ArrayList<FacturaItem>();
+		items.add(FacturaItem.builder().description("Copia de licencia clase " + licencia.getClase()).value(50.0F)
+				.build());
+		FacturaGenerator.generar(c, items, filePath);
+	}
+	
 	
 }

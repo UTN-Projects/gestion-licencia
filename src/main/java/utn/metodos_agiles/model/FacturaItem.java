@@ -1,5 +1,10 @@
 package utn.metodos_agiles.model;
 
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
 public class FacturaItem {
     public String description;
     public Float value;
