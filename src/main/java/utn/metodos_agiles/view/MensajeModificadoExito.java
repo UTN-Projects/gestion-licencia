@@ -15,15 +15,15 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 
-public class MensajeExitoso extends JFrame {
+public class MensajeModificadoExito extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	 private InterfazFormulario interfazFormulario;
+	 private InterfazModificarDatosUsuario interfazMDU;
 	 
 	 
-	public MensajeExitoso(InterfazFormulario interfazFormulario) {
-		this.interfazFormulario = interfazFormulario;
+	public MensajeModificadoExito(InterfazModificarDatosUsuario interfazMDU) {
+		this.interfazMDU = interfazMDU;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MensajeExitoso.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -52,15 +52,8 @@ public class MensajeExitoso extends JFrame {
 		tildeVerde.setBounds(10, 11, 81, 64);
 		panelExito.add(tildeVerde);
 		
-		addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                super.windowClosed(e);
-                if (interfazFormulario != null) {
-                    interfazFormulario.cerrarInterfaz(); 
-                }
-            }
-        });
+		
+       
     }
 	
 }

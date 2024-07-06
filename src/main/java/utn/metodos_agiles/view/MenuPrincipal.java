@@ -4,6 +4,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import entidades.Usuario;
+import utn.metodos_agiles.db.DBManager;
+
 import javax.swing.JTabbedPane;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -31,10 +35,12 @@ public class MenuPrincipal extends JFrame {
 	private JPanel contenidoMenu;
 	private InterfazFormulario interfazForms = null;
 	private InterfazGuardarTitular interfazFormTitular = null;
+	private InterfazOpcionesAvanzadas interfazOA = null;
 	private InterfazLicenciasExpiradas frame = null;
 	private JTextField fieldUsuario;
 	private JPasswordField fieldContra;
-		
+	private Boolean privilegiosU = false;
+	
 	public MenuPrincipal() {
 		setTitle("Sistema de licencias");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ESCUDO_ARG_PATH));
@@ -49,6 +55,7 @@ public class MenuPrincipal extends JFrame {
 		contenidoMenu.setLayout(null);
 		
 		JTabbedPane panelGeneral = new JTabbedPane(JTabbedPane.TOP);
+		
 		panelGeneral.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		panelGeneral.setBackground(new Color(69, 69, 69));
 		panelGeneral.setBounds(0, 0, 584, 411);
@@ -60,6 +67,7 @@ public class MenuPrincipal extends JFrame {
 		tabLogin.setLayout(null);
 		
 		JPanel panelDatosLogin = new JPanel();
+		
 		panelDatosLogin.setBorder(new LineBorder(new Color(69, 69, 69), 1, true));
 		panelDatosLogin.setBackground(new Color(251, 203, 60));
 		panelDatosLogin.setBounds(0, 0, 313, 383);
@@ -133,6 +141,28 @@ public class MenuPrincipal extends JFrame {
 		btnIngresar.setLayout(null);
 		
 		JLabel txtBtnIngresar = new JLabel("Ingresar");
+		txtBtnIngresar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				String usuario = fieldUsuario.getText();
+		        String contrasena = new String(fieldContra.getPassword());
+
+		        if (validarUsuario(usuario, contrasena)) {
+		        	
+		        	panelGeneral.setEnabledAt(1, true);
+		        	 panelGeneral.setEnabledAt(0, false); // Deshabilita la pestaña de Login
+		             panelGeneral.setSelectedIndex(1); // Cambia a la pestaña "Menu Principal"
+		           
+		        } else {
+		            
+		        	abrirMensajeLogin();
+		        }
+		    
+				
+				
+			}
+		});
 		txtBtnIngresar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtBtnIngresar.setHorizontalAlignment(SwingConstants.CENTER);
 		txtBtnIngresar.setForeground(new Color(255, 255, 255));
@@ -157,6 +187,8 @@ public class MenuPrincipal extends JFrame {
 		panelGeneral.addTab("Menu Principal", null, tabMenuPrincipal, null);
 		tabMenuPrincipal.setLayout(null);
 			 
+		panelGeneral.setEnabledAt(1,false);
+		
 			 JLabel txtSF = new JLabel("SANTA FE");
 			 txtSF.setBackground(new Color(255, 255, 255));
 			 txtSF.setForeground(new Color(251, 203, 60));
@@ -189,8 +221,57 @@ public class MenuPrincipal extends JFrame {
 		funcionalidades.add(boton("Guardar Titular", new InterfazGuardarTitular(), 200, 53));
 		funcionalidades.add(boton("Licencias Expiradas", new InterfazLicenciasExpiradas(), 390, 53));
 		funcionalidades.add(boton("Licencias Vigentes", new InterfazLicenciasVigentes(), 10, 90));
+		
+		JPanel btnOpciones = new JPanel();
+		btnOpciones.setLayout(null);
+		btnOpciones.setBackground(new Color(69, 69, 69));
+		btnOpciones.setBounds(408, 344, 161, 28);
+		tabMenuPrincipal.add(btnOpciones);
+		
+		JLabel textoOpciones = new JLabel("Opciones avanzadas");
+		textoOpciones.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				
+				if(privilegiosU) {
+					
+					if (interfazOA == null || !interfazOA.isVisible()) {
+	                    interfazOA = new InterfazOpcionesAvanzadas();
+	                    interfazOA.setVisible(true);
+
+	                    // Agrega un WindowListener para manejar el evento de cierre
+	                    interfazOA.addWindowListener(new WindowAdapter() {
+	                        @Override
+	                        public void windowClosing(WindowEvent e) {
+	                            interfazOA = null;
+	                        }
+	                    });
+
+	                } else {
+	                    interfazOA.requestFocus();
+	                }
+	            }else {
+	            	
+	            	abrirMensajePrivilegios();
+	            }
+					
+			}
+				
+				
+				
+				
+				
+		});
+		textoOpciones.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		textoOpciones.setBounds(0, 0, 161, 28);
+		btnOpciones.add(textoOpciones);
+		textoOpciones.setHorizontalAlignment(SwingConstants.CENTER);
+		textoOpciones.setForeground(Color.WHITE);
+		textoOpciones.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	}
 
+	
 	private JPanel boton(String label, JFrame frame, int x, int y) {
 		JPanel btn = new JPanel();
 		btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -223,5 +304,35 @@ public class MenuPrincipal extends JFrame {
 		btn.add(textoBtn);
 
 		return btn;
+	}
+	
+	protected boolean validarUsuario(String usuario,String contrasena) {
+		
+		Usuario usuarioObj = DBManager.getInstance().verificarLogin(usuario, contrasena);
+		
+		if (usuarioObj == null) {
+	        return false;
+	    }
+		
+		System.out.println(usuarioObj.getNombreUsuario());
+		System.out.println(usuarioObj.devolverPrivilegios());
+		privilegiosU = usuarioObj.devolverPrivilegios();
+		
+		return true;
+	}
+	
+	public void cerrarInterfaz() {
+        dispose(); 
+    }
+	
+	public void abrirMensajeLogin() {
+		MensajeLoginIncorrecto mensajeLogin = new MensajeLoginIncorrecto(this);
+		mensajeLogin.setVisible(true);
+		
+	}
+	public void abrirMensajePrivilegios() {
+		MensajeSinPrivilegios mensajeSinP = new MensajeSinPrivilegios(this);
+		mensajeSinP.setVisible(true);
+		
 	}
 }
