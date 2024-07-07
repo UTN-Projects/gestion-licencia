@@ -1,6 +1,7 @@
 package utn.metodos_agiles.view;
 
-import entidades.Licencia;
+
+import utn.metodos_agiles.entidades.Licencia;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;

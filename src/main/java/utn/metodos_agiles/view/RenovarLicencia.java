@@ -1,27 +1,45 @@
 package utn.metodos_agiles.view;
 
-import entidades.Licencia;
+
+import utn.metodos_agiles.db.DBManager;
+import utn.metodos_agiles.entidades.Licencia;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class RenovarLicencia extends JFrame {
 
-    private JPanel contentPanel;
-    private JTextField textField1;
-    private JButton Renovar;
-
+    private JPanel contentPane;
+    private JTextField textField;
+    private JButton renovarBtn;
     private Licencia licencia;
 
-    public RenovarLicencia() {
+    public RenovarLicencia(Licencia licencia) {
+        super("Renovar Licencia");
+
+        this.licencia = licencia;
+
         setIconImage(Toolkit.getDefaultToolkit().getImage("/imagenes/Escudo_Argentina.png"));
         setResizable(false);
-        setTitle("Renovar Licencia");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setBounds(700, 300, 600, 450);
+        setContentPane(contentPane);
+        pack();
+        renovarBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                renovarLicencia();
+            }
+        });
     }
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+    }
+
+    private void renovarLicencia() {
+        DBManager.getInstance().
     }
 }

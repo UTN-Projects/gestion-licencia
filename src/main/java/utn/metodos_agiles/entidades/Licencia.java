@@ -19,6 +19,9 @@ public class Licencia {
 	@UuidGenerator
 	private String id;
 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private Long numeroLicencia;
+
 	private String nombreTitular;
 
 	private String apellidoTitular;

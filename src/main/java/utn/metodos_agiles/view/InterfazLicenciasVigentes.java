@@ -127,7 +127,7 @@ public class InterfazLicenciasVigentes extends JFrame {
                 .sorted(Comparator.comparingInt(licencia -> licencia.getTitular().getDni()))
                 .toList();
 
-        TableModel tableModel = new LicenciasVigentesTableModel(licencias);
+        LicenciasVigentesTableModel tableModel = new LicenciasVigentesTableModel(licencias);
         tablaDatos.setModel(tableModel);
         scrollPane.setViewportView(tablaDatos);
         
@@ -159,11 +159,19 @@ public class InterfazLicenciasVigentes extends JFrame {
         btnRenovar.setLayout(null);
 
         JLabel btnRenovarTxt = new JLabel("Renovar");
-        JFrame renovarLicencia = new RenovarLicencia();
         btnRenovarTxt.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                renovarLicencia.setVisible(true);
+                int selectedRowI = tablaDatos.getSelectedRow();
+
+                if(selectedRowI == -1) {
+
+                } else {
+                    Licencia licencia = tableModel.getRow(selectedRowI);
+
+                    JFrame renovarLicencia = new RenovarLicencia(licencia);
+                    renovarLicencia.setVisible(true);
+                }
             }
         });
         btnRenovarTxt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

@@ -1,6 +1,6 @@
 package utn.metodos_agiles.view;
 
-import entidades.Licencia;
+import utn.metodos_agiles.entidades.Licencia;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -50,9 +50,8 @@ public class LicenciasVigentesTableModel extends AbstractTableModel {
         return COLUM_NAMES[column];
     }
 
-    @Override
-    public void addTableModelListener(TableModelListener l) {
-        super.addTableModelListener(l);
+    public Licencia getRow(int row) {
+        return licencias.get(row);
     }
 }
 
