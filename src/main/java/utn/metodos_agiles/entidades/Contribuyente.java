@@ -1,4 +1,4 @@
-package entidades;
+package utn.metodos_agiles.entidades;
 
 import jakarta.persistence.*;
 import lombok.*;

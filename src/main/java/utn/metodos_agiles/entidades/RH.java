@@ -1,4 +1,4 @@
-package entidades;
+package utn.metodos_agiles.entidades;
 
 public enum RH {
     POSITIVO, NEGATIVO;

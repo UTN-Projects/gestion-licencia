@@ -11,11 +11,9 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import entidades.*;
 import utn.metodos_agiles.db.DBManager;
+import utn.metodos_agiles.entidades.*;
 import utn.metodos_agiles.util.VigenciaCalculator;
-import utn.metodos_agiles.view.InterfazFormulario;
-import utn.metodos_agiles.view.MensajeExitoso;
 
 import javax.swing.JTable;
 import java.awt.Toolkit;

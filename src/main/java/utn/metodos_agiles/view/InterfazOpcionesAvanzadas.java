@@ -13,8 +13,6 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import entidades.Titular;
-import utn.metodos_agiles.db.DBManager;
 import java.awt.Toolkit;
 import javax.swing.SwingConstants;
 import java.awt.Cursor;

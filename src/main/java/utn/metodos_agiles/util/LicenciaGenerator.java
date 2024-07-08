@@ -77,10 +77,9 @@ public class LicenciaGenerator {
 
                 tableDrawer.draw();
             }
-
             document.save(filePath);
         } catch (IOException e) {
-
+        	System.out.println(e.toString());
         }
     }
 

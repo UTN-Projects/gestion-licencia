@@ -1,8 +1,7 @@
-package entidades;
+package utn.metodos_agiles.entidades;
 
 import jakarta.persistence.*;
 import lombok.*;
-import utn.metodos_agiles.db.DBManager;
 
 import org.hibernate.annotations.UuidGenerator;
 

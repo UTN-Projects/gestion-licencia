@@ -2,7 +2,6 @@ package utn.metodos_agiles.view;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
@@ -18,16 +17,12 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.AbstractDocument;
 
-import entidades.Contribuyente;
-import entidades.Titular;
-import entidades.Usuario;
 import utn.metodos_agiles.db.DBManager;
+import utn.metodos_agiles.entidades.Usuario;
 
 public class ModificarUsuario extends JFrame {
 

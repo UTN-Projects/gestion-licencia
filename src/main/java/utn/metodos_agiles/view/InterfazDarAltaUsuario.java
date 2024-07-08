@@ -27,9 +27,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 
-import entidades.Licencia;
-import entidades.Usuario;
 import utn.metodos_agiles.db.DBManager;
+import utn.metodos_agiles.entidades.Usuario;
 
 public class InterfazDarAltaUsuario extends JFrame {
 

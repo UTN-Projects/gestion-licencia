@@ -11,10 +11,10 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import entidades.ClaseLicencia;
-import entidades.Licencia;
-import entidades.TipoLicencia;
-import entidades.Titular;
+import utn.metodos_agiles.entidades.ClaseLicencia;
+import utn.metodos_agiles.entidades.Licencia;
+import utn.metodos_agiles.entidades.TipoLicencia;
+import utn.metodos_agiles.entidades.Titular;
 import utn.metodos_agiles.db.DBManager;
 import utn.metodos_agiles.util.VigenciaCalculator;
 
@@ -28,7 +28,6 @@ import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
