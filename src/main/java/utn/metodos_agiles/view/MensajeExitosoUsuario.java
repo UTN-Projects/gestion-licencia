@@ -15,15 +15,15 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 
-public class MensajeExitoso extends JFrame {
+public class MensajeExitosoUsuario extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	 private InterfazFormulario interfazFormulario;
+	 private InterfazDarAltaUsuario interfazDAU;
 	 
 	 
-	public MensajeExitoso(InterfazFormulario interfazFormulario) {
-		this.interfazFormulario = interfazFormulario;
+	public MensajeExitosoUsuario(InterfazDarAltaUsuario interfazDAU) {
+		this.interfazDAU = interfazDAU;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MensajeExitoso.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -40,7 +40,7 @@ public class MensajeExitoso extends JFrame {
 		contentPane.add(panelExito);
 		panelExito.setLayout(null);
 		
-		JLabel txtExitoso = new JLabel("Se ha realizado con exito");
+		JLabel txtExitoso = new JLabel("Se ha agregado con exito");
 		txtExitoso.setForeground(new Color(69, 69, 69));
 		txtExitoso.setHorizontalAlignment(SwingConstants.CENTER);
 		txtExitoso.setBounds(101, 34, 229, 19);
@@ -56,8 +56,8 @@ public class MensajeExitoso extends JFrame {
             @Override
             public void windowClosed(WindowEvent e) {
                 super.windowClosed(e);
-                if (interfazFormulario != null) {
-                    interfazFormulario.cerrarInterfaz(); 
+                if (interfazDAU != null) {
+                    interfazDAU.cerrarInterfaz(); 
                 }
             }
         });
