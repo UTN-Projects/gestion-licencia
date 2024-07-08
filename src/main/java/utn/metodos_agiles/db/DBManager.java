@@ -23,7 +23,7 @@ public class DBManager {
 
     private EntityManager entityManager;
 
-    public DBManager(EntityManager entityManager) {
+    private DBManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -130,11 +130,11 @@ public class DBManager {
 	}
 	
 	public Usuario verificarLogin(String usuario, String pass) {
-		
+
 		try {
             entityManager.getTransaction().begin();
 
-            
+
             String jpql = "SELECT u FROM Usuario u WHERE u.nombreUsuario = :usuario AND u.contrasena = :pass";
             Query query = entityManager.createQuery(jpql);
             query.setParameter("usuario", usuario);
@@ -147,39 +147,19 @@ public class DBManager {
             return usuarioOBJ;
 
         } catch (NoResultException e) {
-            
-            entityManager.getTransaction().rollback(); 
+
+            entityManager.getTransaction().rollback();
             return null;
         } catch (Exception e) {
-            
+
             e.printStackTrace();
             entityManager.getTransaction().rollback();
             return null;
         }
-		
+
 	}
 	
 	public Usuario buscarUser(String username) {
-		
-		/*try {
-	        if (!entityManager.getTransaction().isActive()) {
-	            entityManager.getTransaction().begin();
-	        }
-
-	        String jpql = "SELECT u FROM Usuario u WHERE u.nombreUsuario = :usuario";
-	        Query query = entityManager.createQuery(jpql);
-	        query.setParameter("usuario", username);
-
-	        Usuario usuarioOBJ = (Usuario) query.getSingleResult();
-
-	        // No hacer commit aquí para mantener la transacción abierta, si es necesario
-
-	        return usuarioOBJ;
-	    } catch (Exception e) {
-	        // Manejar la excepción según tu lógica de aplicación
-	        throw new RuntimeException("Error al buscar usuario por nombre de usuario", e);
-	    }*/
-		
 		
 	    try {
 	        entityManager.getTransaction().begin();
@@ -200,9 +180,6 @@ public class DBManager {
 	        entityManager.getTransaction().rollback();
 	        throw new RuntimeException("Error al buscar usuario por nombre de usuario: " + username, e);
 	    }
-	
-		
-        
 	}
 
 	public void actualizarUsuario(Usuario usuarioActual, Usuario usuarioViejo) {
