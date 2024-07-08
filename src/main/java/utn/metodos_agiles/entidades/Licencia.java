@@ -61,7 +61,7 @@ public class Licencia {
 		int costoLicencia = 0;
 		int aniosVigencia = this.getFechaVencimiento().toLocalDate().getYear() - this.getFechaEmision().toLocalDate().getYear();
 		switch (this.getClase()) {
-            case ClaseLicencia.A:
+            case A:
 				switch (aniosVigencia) {
 					case 5:
 						costoLicencia = 40;
@@ -79,7 +79,7 @@ public class Licencia {
 						break;
 				}
 				break;
-            case ClaseLicencia.B:
+            case B:
 				switch (aniosVigencia) {
 					case 5:
 						costoLicencia = 40;
@@ -96,7 +96,7 @@ public class Licencia {
 					default:
 						break;
 				}
-            case ClaseLicencia.C:
+            case C:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 47;
@@ -113,7 +113,7 @@ public class Licencia {
 				default:
 					break;
 			}
-            case ClaseLicencia.D:
+            case D:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 50;
@@ -130,7 +130,7 @@ public class Licencia {
 				default:
 					break;
 			}
-            case ClaseLicencia.E:
+            case E:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 59;
@@ -147,7 +147,7 @@ public class Licencia {
 				default:
 					break;
 			}
-            case ClaseLicencia.F:
+            case F:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 50;
@@ -164,7 +164,7 @@ public class Licencia {
 				default:
 					break;
 			}
-            case ClaseLicencia.G:
+            case G:
 			switch (aniosVigencia) {
 				case 5:
 					costoLicencia = 40;
