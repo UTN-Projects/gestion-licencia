@@ -4,11 +4,11 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
-import utn.metodos_agiles.entidades.ClaseLicencia;
-import utn.metodos_agiles.entidades.Contribuyente;
-import utn.metodos_agiles.entidades.Licencia;
-import utn.metodos_agiles.entidades.Titular;
-import utn.metodos_agiles.entidades.Usuario;
+import utn.metodos_agiles.model.entidades.ClaseLicencia;
+import utn.metodos_agiles.model.entidades.Contribuyente;
+import utn.metodos_agiles.model.entidades.Licencia;
+import utn.metodos_agiles.model.entidades.Titular;
+import utn.metodos_agiles.model.entidades.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -60,15 +60,6 @@ public class DBManager {
 
         return contribuyente;
 	}
-	
-		
-	public List<ClaseLicencia> recuperarClasesLicencias(int dni) {
-		List<Licencia> licencias = entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.titular.dni = ?1")
-				.setParameter(1, dni)
-				.getResultList();
-
-		return licencias.stream().map(l -> l.getClase()).toList();
-	}
 
     public List<Licencia> recuperarLicenciasVencidas() {
         return entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.fechaVencimiento <= ?1")
@@ -100,7 +91,7 @@ public class DBManager {
                 .intValue();
 	}
 
-	public void cargarLicencia(Licencia licencia) {
+	public void guardarLicencia(Licencia licencia) {
         entityManager.getTransaction().begin();
 
         entityManager.createQuery("UPDATE Licencia SET vigente = false WHERE titular.dni = ?1 AND vigente = true AND clase =?2")
@@ -113,7 +104,7 @@ public class DBManager {
     }
 
 	public List<Licencia> cargarLicenciasTitular(int dni) {
-        return entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND vigente = true")
+        return entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND licencia.vigente = true")
 				.setParameter(1, dni)
 				.getResultList();
 	}
@@ -188,21 +179,21 @@ public class DBManager {
 	    }
 	}
 
-	public void actualizarUsuario(Usuario usuarioActual, Usuario usuarioViejo) {
+	public void actualizarUsuario(Usuario usuario) {
 
 		 try {
 		        entityManager.getTransaction().begin();
 
 		        // Buscar el usuario por nombre de usuario (o cualquier otro criterio que uses)
-		        Usuario usuarioEnBD = entityManager.find(Usuario.class, usuarioViejo.getId());
+		        Usuario usuarioEnBD = entityManager.find(Usuario.class, usuario.getId());
 
 		        // Actualizar los campos del usuario recuperado con los nuevos valores de usuarioActual
-		        usuarioEnBD.setCorreoElectronico(usuarioActual.getCorreoElectronico());
-		        usuarioEnBD.setNombre(usuarioActual.getNombre());
-		        usuarioEnBD.setApellido(usuarioActual.getApellido());
-		        usuarioEnBD.setTelefono(usuarioActual.getTelefono());
-		        usuarioEnBD.setContrasena(usuarioActual.getContrasena());
-		        usuarioEnBD.setNombreUsuario(usuarioActual.getNombreUsuario());
+		        usuarioEnBD.setCorreoElectronico(usuario.getCorreoElectronico());
+		        usuarioEnBD.setNombre(usuario.getNombre());
+		        usuarioEnBD.setApellido(usuario.getApellido());
+		        usuarioEnBD.setTelefono(usuario.getTelefono());
+		        usuarioEnBD.setContrasena(usuario.getContrasena());
+		        usuarioEnBD.setNombreUsuario(usuario.getNombreUsuario());
 
 		        entityManager.getTransaction().commit();
 		    } catch (Exception e) {

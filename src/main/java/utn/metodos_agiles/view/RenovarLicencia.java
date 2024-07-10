@@ -1,8 +1,8 @@
 package utn.metodos_agiles.view;
 
 
-import utn.metodos_agiles.db.DBManager;
-import utn.metodos_agiles.entidades.Licencia;
+import utn.metodos_agiles.controller.LicenciaController;
+import utn.metodos_agiles.model.entidades.Licencia;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,16 +30,12 @@ public class RenovarLicencia extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                renovarLicencia();
+                LicenciaController.getInstance().renovarLicencia();
             }
         });
     }
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-    }
-
-    private void renovarLicencia() {
-        DBManager.getInstance().
     }
 }

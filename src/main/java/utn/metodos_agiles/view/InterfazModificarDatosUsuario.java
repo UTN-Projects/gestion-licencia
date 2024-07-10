@@ -17,8 +17,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 
-import utn.metodos_agiles.db.DBManager;
-import utn.metodos_agiles.entidades.Usuario;
+import utn.metodos_agiles.controller.UsuarioController;
+import utn.metodos_agiles.model.entidades.Usuario;
+import utn.metodos_agiles.view.dialogs.MensajeModificadoExito;
+import utn.metodos_agiles.view.licenciasvigentes.InterfazLicenciasVigentes;
 
 public class InterfazModificarDatosUsuario extends JFrame {
 
@@ -241,8 +243,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
         String apellido = txtApellido.getText();
         String telefono = textTel.getText();
         String contrasena = textContra.getText();
-        Usuario usuarioViejo = usuarioActual;
-        
+
         // Actualizar los campos del usuario solo si se han ingresado valores válidos
         if (!correo.isEmpty()) {
             usuarioActual.setCorreoElectronico(correo);
@@ -267,7 +268,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
         }
 
         // Guardar los cambios en la base de datos
-        DBManager.getInstance().actualizarUsuario(usuarioActual, usuarioViejo);
+        UsuarioController.getInstance().updateUser(usuarioActual);
     }
        
 	public void abrirMensajeModificadoExito() {

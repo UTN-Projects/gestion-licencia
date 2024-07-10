@@ -1,8 +1,10 @@
 package utn.metodos_agiles.view;
 
+import utn.metodos_agiles.view.guardartitular.InterfazGuardarTitular;
+import utn.metodos_agiles.view.modificarusuario.ModificarUsuario;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
@@ -154,10 +156,7 @@ public class InterfazOpcionesAvanzadas extends JFrame {
         btnAtrasTxt.setForeground(new Color(255, 255, 255));
         btnAtrasTxt.setHorizontalAlignment(SwingConstants.CENTER);
         btnAtrasTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
-	
-		
-			}
+    }
 	
 	 public void cerrarInterfaz() {
 	        dispose(); 
