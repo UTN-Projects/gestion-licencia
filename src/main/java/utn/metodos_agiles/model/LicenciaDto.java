@@ -22,29 +22,29 @@ public class LicenciaDto {
     
     public static String traductorMes(int mes) {
     	switch(mes) {
-    	case 1:
+    	case 0:
     		return "ENE";
-    	case 2:
+    	case 1:
     		return "FEB";
-    	case 3:
+    	case 2:
     		return "MAR";
-    	case 4:
+    	case 3:
     		return "ABR";
-    	case 5:
+    	case 4:
     		return "MAY";
-    	case 6:
+    	case 5:
     		return "JUN";
-    	case 7:
+    	case 6:
     		return "JUL";
-    	case 8:
+    	case 7:
     		return "AGO";
-    	case 9:
+    	case 8:
     		return "SEP";
-    	case 10:
+    	case 9:
     		return "OCT";
-    	case 11:
+    	case 10:
     		return "NOV";
-    	case 12:
+    	case 11:
     		return "DIC";
     			
     	}

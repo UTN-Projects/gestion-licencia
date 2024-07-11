@@ -108,14 +108,22 @@ public class DBManager {
         entityManager.getTransaction().commit();
     }
 
+    public void cargarCopiaLicencia(Licencia licencia) {
+        entityManager.getTransaction().begin();
+
+        entityManager.persist(licencia);
+
+        entityManager.getTransaction().commit();
+    }
+
 	public List<Licencia> cargarLicenciasTitular(int dni) {
         return entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND vigente = true")
 				.setParameter(1, dni)
 				.getResultList();
 	}
 
-	public Long IDLicencia(int dniTitular, ClaseLicencia clase) {
-		return (Long) entityManager.createQuery("SELECT licencia.id FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND clase = ?2 AND vigente = true")
+	public String IDLicencia(int dniTitular, ClaseLicencia clase) {
+		return (String) entityManager.createQuery("SELECT licencia.id FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND clase = ?2 AND vigente = true")
 				.setParameter(1, dniTitular)
 				.setParameter(2, clase)
 				.getSingleResult();

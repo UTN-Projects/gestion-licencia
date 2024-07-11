@@ -205,7 +205,7 @@ public class InterfazEmitirCopia extends JFrame {
         			//Generar copia y guardarla
         			if(licencias.get(tablaDatos.getSelectedRow()) != null) {
         				licencia = emitirCopia(tablaDatos.getSelectedRow());
-        				DBManager.getInstance().cargarLicencia(licencia);
+        				DBManager.getInstance().cargarCopiaLicencia(licencia);
         				imprimirLicencia();
         				imprimirFactura();
         				abrirMensajeExitoso();
@@ -285,21 +285,25 @@ public class InterfazEmitirCopia extends JFrame {
         String imagePath = "src/main/resources/fotos/" + titular.getDni() +".png";
 
         LicenciaDto l = LicenciaDto.builder()
-				.number("" + DBManager.getInstance().IDLicencia(licencia.getTitular().getDni(), licencia.getClase()))
+				.number(licencia.getId())
+						// DBManager.getInstance().IDLicencia(licencia.getTitular().getDni(), licencia.getClase()))
 				.lastname(licencia.getTitular().getApellido())
 				.name(licencia.getTitular().getNombre())
 				.address(licencia.getCalleTitular() + " " + licencia.getNroCasaTitular())
-				.birth(licencia.getFechaNacTitular().getDay() +
-						LicenciaDto.traductorMes(licencia.getFechaNacTitular().getMonth()) +
-						licencia.getFechaNacTitular().getYear())
-				.emition(licencia.getFechaEmision().getDay() +
-						LicenciaDto.traductorMes(licencia.getFechaEmision().getMonth()) +
-						licencia.getFechaEmision().getYear())
-				.expiration(licencia.getFechaVencimiento().getDay() +
-						LicenciaDto.traductorMes(licencia.getFechaVencimiento().getMonth()) +
-						licencia.getFechaVencimiento().getYear())
-				.isDonor(licencia.isEsDonanteTitular()).bloodType(licencia.getGrupoSangTitular().toString() + licencia.getRhTitular())
-				.cuil("" + licencia.getTitular().getDni()).observations(licencia.getObservaciones())
+				.birth(licencia.getFechaNacTitular().getDate() + " " +
+						LicenciaDto.traductorMes(licencia.getFechaNacTitular().getMonth()) + " " +
+						String.valueOf(1900 + licencia.getFechaNacTitular().getYear()))
+				.emition(licencia.getFechaEmision().getDate() + " " +
+						LicenciaDto.traductorMes(licencia.getFechaEmision().getMonth()) + " " +
+						String.valueOf(1900 + licencia.getFechaEmision().getYear()))
+				.expiration(licencia.getFechaVencimiento().getDate() + " " +
+						LicenciaDto.traductorMes(licencia.getFechaVencimiento().getMonth()) + " " +
+						String.valueOf(1900 + licencia.getFechaVencimiento().getYear()))
+				.licencia(licencia.getClase().toString())
+				.isDonor(licencia.isEsDonanteTitular())
+				.bloodType(licencia.getGrupoSangTitular().toString() + licencia.getRhTitular())
+				.cuil("" + licencia.getTitular().getDni())
+				.observations(licencia.getObservaciones())
 				.type(licencia.getTipo().toString()).build();
 		LicenciaGenerator.generar(l, imagePath, filePath);
 	}

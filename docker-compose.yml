@@ -10,7 +10,7 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: Ezequiel98
       MYSQL_DATABASE: gestion-licencia
     volumes:
       - ./database:/var/lib/mysql
