@@ -220,7 +220,7 @@ public class MenuPrincipal extends JFrame {
 
 		funcionalidades.add(boton("Emitir Licencia", new InterfazFormulario(),10, 53));
 		funcionalidades.add(boton("Emitir Copia", new InterfazEmitirCopia(), 200, 53));
-		funcionalidades.add(boton("Guardar Titular", new InterfazGuardarTitular(), 390, 53));
+		funcionalidades.add(boton("Opciones Titular", new InterfazOpcionesTitular(), 390, 53));
 		funcionalidades.add(boton("Licencias Vigentes", new InterfazLicenciasVigentes(), 10, 90));
         funcionalidades.add(boton("Licencias Expiradas", new InterfazLicenciasExpiradas(), 200, 90));
         funcionalidades.add(boton("Opciones avanzadas", new InterfazOpcionesAvanzadas(), 390, 90));
