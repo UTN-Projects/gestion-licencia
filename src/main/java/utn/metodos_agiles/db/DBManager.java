@@ -204,4 +204,28 @@ public class DBManager {
 
 	}
 
+    public void actualizarTitular(Titular titularActual, Titular titularViejo) {
+
+        try {
+               entityManager.getTransaction().begin();
+
+               // Buscar el usuario por nombre de usuario (o cualquier otro criterio que uses)
+               Titular titularEnBD = entityManager.find(Titular.class, titularViejo.getDni());
+
+               // Actualizar los campos del usuario recuperado con los nuevos valores de usuarioActual
+               titularEnBD.setNombre(titularActual.getNombre());
+               titularEnBD.setApellido(titularActual.getApellido());
+               titularEnBD.setCalle(titularActual.getCalle());
+               titularEnBD.setNroCasa(titularActual.getNroCasa());
+               titularEnBD.setEsDonante(titularActual.getEsDonante());
+
+
+               entityManager.getTransaction().commit();
+           } catch (Exception e) {
+               entityManager.getTransaction().rollback();
+               throw new RuntimeException("Error al actualizar usuario", e);
+           }
+
+   }
+
 }
