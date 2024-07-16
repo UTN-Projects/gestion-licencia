@@ -62,13 +62,13 @@ public class DBManager {
 	}
 
     public List<Licencia> recuperarLicenciasVencidas() {
-        return entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.fechaVencimiento <= ?1")
+        return entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.fechaVencimiento <= ?1 AND licencia.vigente = true")
                 .setParameter(1, LocalDate.now())
                 .getResultList();
     }
 
     public List<Licencia> recuperarLicenciasVigentes() {
-        return  entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.fechaVencimiento > ?1")
+        return  entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.fechaVencimiento > ?1 AND licencia.vigente = true")
                 .setParameter(1, LocalDate.now())
                 .getResultList();
     }
@@ -104,13 +104,14 @@ public class DBManager {
     }
 
 	public List<Licencia> cargarLicenciasTitular(int dni) {
-        return entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND licencia.vigente = true")
+        return entityManager.createQuery("SELECT licencia FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND licencia.vigente = true AND licencia.fechaVencimiento > ?2")
 				.setParameter(1, dni)
+                .setParameter(2, LocalDate.now())
 				.getResultList();
 	}
 
-	public Long IDLicencia(int dniTitular, ClaseLicencia clase) {
-		return (Long) entityManager.createQuery("SELECT licencia.id FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND clase = ?2 AND vigente = true")
+	public String IDLicencia(int dniTitular, ClaseLicencia clase) {
+		return (String) entityManager.createQuery("SELECT licencia.id FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND clase = ?2 AND vigente = true")
 				.setParameter(1, dniTitular)
 				.setParameter(2, clase)
 				.getSingleResult();

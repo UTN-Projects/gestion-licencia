@@ -111,19 +111,13 @@ public class LicenciaController {
         String imagePath = "src/main/resources/fotos/" + titular.getDni() +".png";
 
         LicenciaDto l = LicenciaDto.builder()
-                .number("" + DBManager.getInstance().IDLicencia(licencia.getTitular().getDni(), licencia.getClase()))
+                .number(DBManager.getInstance().IDLicencia(licencia.getTitular().getDni(), licencia.getClase()))
                 .lastname(licencia.getTitular().getApellido())
                 .name(licencia.getTitular().getNombre())
                 .address(licencia.getCalleTitular() + " " + licencia.getNroCasaTitular())
-                .birth(licencia.getFechaNacTitular().getDay() +
-                        LicenciaDto.traductorMes(licencia.getFechaNacTitular().getMonth()) +
-                        licencia.getFechaNacTitular().getYear())
-                .emition(licencia.getFechaEmision().getDay() +
-                        LicenciaDto.traductorMes(licencia.getFechaEmision().getMonth()) +
-                        licencia.getFechaEmision().getYear())
-                .expiration(licencia.getFechaVencimiento().getDay() +
-                        LicenciaDto.traductorMes(licencia.getFechaVencimiento().getMonth()) +
-                        licencia.getFechaVencimiento().getYear())
+                .birth(dateToString(licencia.getFechaNacTitular()))
+                .emition(dateToString(licencia.getFechaEmision()))
+                .expiration(dateToString(licencia.getFechaVencimiento()))
                 .isDonor(licencia.isEsDonanteTitular()).bloodType(licencia.getGrupoSangTitular().toString() + licencia.getRhTitular())
                 .cuil("" + licencia.getTitular().getDni()).observations(licencia.getObservaciones())
                 .type(licencia.getTipo().toString()).build();
@@ -168,5 +162,40 @@ public class LicenciaController {
         }
 
         return Date.valueOf(vig.plusYears(mas));
+    }
+
+    private String dateToString(Date date) {
+        return date.getDay() + traductorMes(date.getMonth()) + date.getYear();
+    }
+
+    private static String traductorMes(int mes) {
+        switch(mes) {
+            case 1:
+                return "ENE";
+            case 2:
+                return "FEB";
+            case 3:
+                return "MAR";
+            case 4:
+                return "ABR";
+            case 5:
+                return "MAY";
+            case 6:
+                return "JUN";
+            case 7:
+                return "JUL";
+            case 8:
+                return "AGO";
+            case 9:
+                return "SEP";
+            case 10:
+                return "OCT";
+            case 11:
+                return "NOV";
+            case 12:
+                return "DIC";
+
+        }
+        return "";
     }
 }

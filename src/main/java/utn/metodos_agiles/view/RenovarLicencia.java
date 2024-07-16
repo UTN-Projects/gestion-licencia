@@ -30,7 +30,7 @@ public class RenovarLicencia extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                LicenciaController.getInstance().renovarLicencia();
+                LicenciaController.getInstance().renovarLicencia(licencia);
             }
         });
     }

@@ -38,7 +38,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
 		this.usuarioActual = usuarioMod;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazLicenciasVigentes.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
-		setTitle("Agregar usuario");
+		setTitle("Modificar usuario");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 300, 600, 450);
 		
@@ -77,6 +77,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
         txtCorreo.setBounds(190, 0, 147, 26);
         datosVigencia.add(txtCorreo);
         txtCorreo.setColumns(10);
+        txtCorreo.setText(usuarioMod.getCorreoElectronico());
         
         JLabel correoLbl = new JLabel("CORREO ELECTRONICO:");
         correoLbl.setForeground(new Color(69, 69, 69));
@@ -99,6 +100,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
         txtNombre.setBackground(new Color(251, 203, 60));
         txtNombre.setBounds(94, 43, 112, 26);
         datosVigencia.add(txtNombre);
+        txtNombre.setText(usuarioMod.getNombre());
         
         JSeparator separatorTxtNombre = new JSeparator();
         separatorTxtNombre.setForeground(new Color(69, 69, 69));
@@ -127,6 +129,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
         txtApellido.setBackground(new Color(251, 203, 60));
         txtApellido.setBounds(94, 91, 112, 26);
         datosVigencia.add(txtApellido);
+        txtApellido.setText(usuarioMod.getApellido());
         
         JLabel apellidoLabel = new JLabel("APELLIDO:");
         apellidoLabel.setForeground(new Color(69, 69, 69));
@@ -157,6 +160,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
 		textTel.setBackground(new Color(251, 203, 60));
 		textTel.setBounds(399, 43, 112, 26);
 		datosVigencia.add(textTel);
+        textTel.setText(usuarioMod.getTelefono());
 		
 		JSeparator separatorTxtTel = new JSeparator();
 		separatorTxtTel.setForeground(new Color(69, 69, 69));
@@ -173,7 +177,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
 		textContra.setBackground(new Color(251, 203, 60));
 		textContra.setBounds(399, 91, 112, 26);
 		datosVigencia.add(textContra);
-		
+
 		JSeparator separatorTxtContra = new JSeparator();
 		separatorTxtContra.setForeground(new Color(69, 69, 69));
 		separatorTxtContra.setBackground(new Color(69, 69, 69));

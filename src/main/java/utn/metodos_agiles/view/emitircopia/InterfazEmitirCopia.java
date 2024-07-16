@@ -42,7 +42,6 @@ public class InterfazEmitirCopia extends JFrame {
 	private JTable tablaDatos;
 	private Titular titular;
 	private Licencia licencia;
-	private List<Licencia> licencias;
 	private MensajeExitoso mensajeExitoso;
 	private JLabel nombreTitular;
 
@@ -187,9 +186,13 @@ public class InterfazEmitirCopia extends JFrame {
         		
         		if(tablaDatos.getSelectedRow() != -1) {
         			//Generar copia y guardarla
-        			if(licencias.get(tablaDatos.getSelectedRow()) != null) {
-                        LicenciaController.getInstance().copiarLicencia(licencias.get(tablaDatos.getSelectedRow()));
+                    Licencia licenciaSeleccionada = ((EmitirCopiaTableModel) tablaDatos.getModel())
+                            .getLicenciaAt(tablaDatos.getSelectedRow());
 
+        			if(licenciaSeleccionada != null) {
+                        LicenciaController.getInstance().copiarLicencia(licenciaSeleccionada);
+
+                        // todo: fix mostrar mensaje
         				abrirMensajeExitoso();
         			} else {
             			abrirAdvertencia();

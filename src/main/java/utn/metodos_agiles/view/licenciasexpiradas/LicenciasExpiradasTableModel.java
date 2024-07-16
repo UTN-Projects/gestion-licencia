@@ -9,7 +9,7 @@ import java.util.List;
 public class LicenciasExpiradasTableModel extends AbstractTableModel {
 
     private static final String[] COLUM_NAMES = {
-            "DNI", "NOMBRE", "APELLIDO", "TIPO DE LICENCIA", "CADUCIDAD"
+            "DNI", "NOMBRE", "APELLIDO", "COPIA", "CADUCIDAD"
     };
 
     private List<Licencia> licencias;
@@ -45,5 +45,10 @@ public class LicenciasExpiradasTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         return COLUM_NAMES[column];
+    }
+
+    public Licencia getLicenciaAt(int row) {
+        if(row > (getRowCount() - 1)) return null;
+        return licencias.get(row);
     }
 }

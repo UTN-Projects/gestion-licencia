@@ -8,7 +8,7 @@ import java.util.List;
 public class EmitirCopiaTableModel extends AbstractTableModel {
 
     private static final String[] COLUM_NAMES = {
-            "CLASE", "TIPO", "VENCIMIENTO"
+            "CLASE", "COPIA", "VENCIMIENTO"
     };
 
     private List<Licencia> licencias;
@@ -42,5 +42,10 @@ public class EmitirCopiaTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         return COLUM_NAMES[column];
+    }
+
+    public Licencia getLicenciaAt(int row) {
+        if(row > (getRowCount()-1)) return null;
+        return licencias.get(row);
     }
 }

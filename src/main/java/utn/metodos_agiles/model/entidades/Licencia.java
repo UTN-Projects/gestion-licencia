@@ -20,8 +20,6 @@ public class Licencia {
 	@UuidGenerator
 	private String id;
 
-	private Long numeroLicencia;
-
 	private String nombreTitular;
 
 	private String apellidoTitular;
