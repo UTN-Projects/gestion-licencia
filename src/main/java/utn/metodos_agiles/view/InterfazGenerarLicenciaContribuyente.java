@@ -11,9 +11,10 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import utn.metodos_agiles.db.DBManager;
-import utn.metodos_agiles.entidades.*;
-import utn.metodos_agiles.util.VigenciaCalculator;
+import utn.metodos_agiles.controller.LicenciaController;
+import utn.metodos_agiles.model.entidades.*;
+import utn.metodos_agiles.view.dialogs.MensajeExitoso;
+import utn.metodos_agiles.view.emitirlicencia.InterfazEmitirLicencia;
 
 import javax.swing.JTable;
 import java.awt.Toolkit;
@@ -21,8 +22,6 @@ import javax.swing.SwingConstants;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Date;
-import java.time.LocalDate;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
@@ -41,7 +40,7 @@ public class InterfazGenerarLicenciaContribuyente extends JFrame {
 	private MensajeExitoso mensajeExitoso;
 
 	public InterfazGenerarLicenciaContribuyente(Contribuyente contribuyente) {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazFormulario.class.getResource("/imagenes/Escudo_Argentina.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazEmitirLicencia.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
 		setTitle("Emitir licencia");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -144,13 +143,12 @@ public class InterfazGenerarLicenciaContribuyente extends JFrame {
         btnEmitirTxt.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		
-        		licencia = emitirLicencia(contribuyente);
-                DBManager.getInstance().guardarTitular(Titular.of(contribuyente));
-        		DBManager.getInstance().cargarLicencia(licencia);
+
+                ClaseLicencia clase = ClaseLicencia.valueOf((String) comboBoxClase.getSelectedItem());
+                String observacion = textoObs.getText();
+
+                LicenciaController.getInstance().emitirLicencia(Titular.of(contribuyente), clase, observacion);
         		abrirMensajeExitoso();
-        		
-        		
         	}
         });
         btnEmitirTxt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -159,53 +157,15 @@ public class InterfazGenerarLicenciaContribuyente extends JFrame {
         btnEmitirTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
         btnEmitirTxt.setBounds(0, 0, 96, 23);
         btnEmitir.add(btnEmitirTxt);
-		
-	
-		
-			}
-	
-	
-	private Licencia emitirLicencia(Contribuyente contribuyente) {
-		
-		String claseSeleccionada = (String) comboBoxClase.getSelectedItem();
-	    
-	    
-	    String observaciones = textoObs.getText();
-	    
-	    LocalDate fechaEmisionLocal = LocalDate.now();
-	    Date fechaEmision = Date.valueOf(fechaEmisionLocal);
 
-        int cantLic = DBManager.getInstance().cantLicTitular(contribuyente.getDni());
-
-        return Licencia.builder()
-                .titular(Titular.builder()
-                        .dni(contribuyente.getDni())
-                        .build())
-                .nombreTitular(contribuyente.getNombre())
-                .apellidoTitular(contribuyente.getApellido())
-                .fechaNacTitular(contribuyente.getFechaNacimiento())
-                .calleTitular(contribuyente.getCalle())
-                .nroCasaTitular(contribuyente.getNroCasa())
-                .clase(ClaseLicencia.valueOf(claseSeleccionada))
-                .tipo(TipoLicencia.ORIGINAL)
-                .grupoSangTitular(contribuyente.getGrupoSanguineo())
-                .rhTitular(contribuyente.getRh())
-                .esDonanteTitular(contribuyente.getEsDonante())
-                .observaciones(observaciones)
-                .fechaEmision(fechaEmision)
-                .administrador("Juan Perez")
-                .vigente(true)
-                .fechaVencimiento(VigenciaCalculator.calcularVigencia(contribuyente.getEdad(), cantLic))
-                .build();
-	}
+    }
 	
 	 public void cerrarInterfaz() {
 	        dispose(); 
 	    }
 	
-	
 	public void abrirMensajeExitoso() {
-		MensajeExitoso mensajeExitoso = new MensajeExitoso(new InterfazFormulario());
+		MensajeExitoso mensajeExitoso = new MensajeExitoso(new InterfazEmitirLicencia());
 		mensajeExitoso.setVisible(true);
 		setVisible(false); 
 	}

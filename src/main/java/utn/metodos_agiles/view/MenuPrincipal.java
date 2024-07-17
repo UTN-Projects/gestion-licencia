@@ -1,7 +1,14 @@
 package utn.metodos_agiles.view;
 
-import utn.metodos_agiles.db.DBManager;
-import utn.metodos_agiles.entidades.Usuario;
+import utn.metodos_agiles.controller.UsuarioController;
+import utn.metodos_agiles.model.entidades.Usuario;
+import utn.metodos_agiles.view.dialogs.MensajeLoginIncorrecto;
+import utn.metodos_agiles.view.dialogs.MensajeSinPrivilegios;
+import utn.metodos_agiles.view.emitircopia.InterfazEmitirCopia;
+import utn.metodos_agiles.view.emitirlicencia.InterfazEmitirLicencia;
+import utn.metodos_agiles.view.guardartitular.InterfazGuardarTitular;
+import utn.metodos_agiles.view.licenciasexpiradas.InterfazLicenciasExpiradas;
+import utn.metodos_agiles.view.licenciasvigentes.InterfazLicenciasVigentes;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -32,12 +39,6 @@ public class MenuPrincipal extends JFrame {
 	private static final String PUENTE_COLGANTE_PATH = "src/main/resources/imagenes/puente_colgante_desenfocado.png";
 
 	private JPanel contenidoMenu;
-	private InterfazFormulario interfazForms = null;
-	private InterfazGuardarTitular interfazFormTitular = null;
-	private InterfazOpcionesAvanzadas interfazOA = null;
-	private InterfazLicenciasExpiradas frame = null;
-	private InterfazLicenciasExpiradas interfazLicenciasExpiradas = null;
-	private InterfazEmitirCopia interfazEmitirCopia = null;
 	private JTextField fieldUsuario;
 	private JPasswordField fieldContra;
 	private Boolean privilegiosU = false;
@@ -218,9 +219,9 @@ public class MenuPrincipal extends JFrame {
 			 funcionalidades.setLayout(null);
 
 
-		funcionalidades.add(boton("Emitir Licencia", new InterfazFormulario(),10, 53));
+		funcionalidades.add(boton("Emitir Licencia", new InterfazEmitirLicencia(),10, 53));
 		funcionalidades.add(boton("Emitir Copia", new InterfazEmitirCopia(), 200, 53));
-		funcionalidades.add(boton("Guardar Titular", new InterfazGuardarTitular(), 390, 53));
+		funcionalidades.add(boton("Opciones Titular", new InterfazOpcionesTitular(), 390, 53));
 		funcionalidades.add(boton("Licencias Vigentes", new InterfazLicenciasVigentes(), 10, 90));
         funcionalidades.add(boton("Licencias Expiradas", new InterfazLicenciasExpiradas(), 200, 90));
         funcionalidades.add(boton("Opciones avanzadas", new InterfazOpcionesAvanzadas(), 390, 90));
@@ -262,7 +263,7 @@ public class MenuPrincipal extends JFrame {
 
 	protected boolean validarUsuario(String usuario,String contrasena) {
 
-		Usuario usuarioObj = DBManager.getInstance().verificarLogin(usuario, contrasena);
+		Usuario usuarioObj = UsuarioController.getInstance().verificarLogin(usuario,contrasena);
 
 		if (usuarioObj == null) {
 	        return false;

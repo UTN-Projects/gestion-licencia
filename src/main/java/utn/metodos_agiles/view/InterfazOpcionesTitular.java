@@ -1,7 +1,6 @@
 package utn.metodos_agiles.view;
 
 import utn.metodos_agiles.view.guardartitular.InterfazGuardarTitular;
-import utn.metodos_agiles.view.modificarusuario.ModificarUsuario;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -23,19 +22,19 @@ import java.awt.event.MouseEvent;
 
 
 
-public class InterfazOpcionesAvanzadas extends JFrame {
+public class InterfazOpcionesTitular extends JFrame {
 
 
 	private static final long serialVersionUID = 1L;
-    private InterfazDarAltaUsuario interfazDAU = null;
-    private ModificarUsuario modificarU = null;
+    private InterfazGuardarTitular interfazDAT = null;
+    private ModificarTitular modificarT = null;
 	private JPanel contentPane;
 	
 
-	public InterfazOpcionesAvanzadas() {
+	public InterfazOpcionesTitular() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazGuardarTitular.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
-		setTitle("Opciones Avanzadas");
+		setTitle("Opciones Titular");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 300, 600, 450);
 		
@@ -50,7 +49,7 @@ public class InterfazOpcionesAvanzadas extends JFrame {
 		
         JPanel OpcionesAdmin = new JPanel();
         OpcionesAdmin.setBackground(new Color(251, 203, 60));
-        OpcionesAdmin.setBorder(new TitledBorder(new LineBorder(new Color(69, 69, 69), 2, true), "Opciones del Administrador", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(69, 69, 69)));
+        OpcionesAdmin.setBorder(new TitledBorder(new LineBorder(new Color(69, 69, 69), 2, true), "Opciones", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(69, 69, 69)));
         OpcionesAdmin.setBounds(10, 145, 564, 93);
         OpcionesAdmin.setLayout(null);
 
@@ -63,63 +62,63 @@ public class InterfazOpcionesAvanzadas extends JFrame {
         btnAgregar.setBounds(48, 33, 137, 37);
         OpcionesAdmin.add(btnAgregar);
         
-        JLabel lblAgregarUsuario = new JLabel("Agregar usuario");
-        lblAgregarUsuario.addMouseListener(new MouseAdapter() {
+        JLabel lblAgregarTitular = new JLabel("Guardar Titular");
+        lblAgregarTitular.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
         		
-        		if (interfazDAU == null || !interfazDAU.isVisible()) {
-                    interfazDAU = new InterfazDarAltaUsuario();
-                    interfazDAU.setVisible(true);
+        		if (interfazDAT == null || !interfazDAT.isVisible()) {
+                    interfazDAT = new InterfazGuardarTitular();
+                    interfazDAT.setVisible(true);
 
                     // Agrega un WindowListener para manejar el evento de cierre
-                    interfazDAU.addWindowListener(new WindowAdapter() {
+                    interfazDAT.addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosing(WindowEvent e) {
-                            interfazDAU = null;
+                            interfazDAT = null;
                         }
                     });
 
                 } else {
-                    interfazDAU.requestFocus();
+                    interfazDAT.requestFocus();
                 }
             }
         		
         	
         });
-        lblAgregarUsuario.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        lblAgregarUsuario.setBounds(0, 0, 137, 37);
-        btnAgregar.add(lblAgregarUsuario);
-        lblAgregarUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-        lblAgregarUsuario.setForeground(Color.WHITE);
-        lblAgregarUsuario.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        lblAgregarTitular.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lblAgregarTitular.setBounds(0, 0, 137, 37);
+        btnAgregar.add(lblAgregarTitular);
+        lblAgregarTitular.setHorizontalAlignment(SwingConstants.CENTER);
+        lblAgregarTitular.setForeground(Color.WHITE);
+        lblAgregarTitular.setFont(new Font("Tahoma", Font.PLAIN, 15));
         
-        JPanel btnModificarUsu = new JPanel();
-        btnModificarUsu.setLayout(null);
-        btnModificarUsu.setBackground(new Color(69, 69, 69));
-        btnModificarUsu.setBounds(379, 33, 137, 37);
-        OpcionesAdmin.add(btnModificarUsu);
+        JPanel btnModificarTit = new JPanel();
+        btnModificarTit.setLayout(null);
+        btnModificarTit.setBackground(new Color(69, 69, 69));
+        btnModificarTit.setBounds(379, 33, 137, 37);
+        OpcionesAdmin.add(btnModificarTit);
         
-        JLabel lblModificarUsuario = new JLabel("Modificar usuario");
-        lblModificarUsuario.addMouseListener(new MouseAdapter() {
+        JLabel lblModificarTitular = new JLabel("Modificar Titular");
+        lblModificarTitular.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
         		
         		
-        		if (modificarU == null || !modificarU.isVisible()) {
-        			modificarU = new ModificarUsuario();
-        			modificarU.setVisible(true);
+        		if (modificarT == null || !modificarT.isVisible()) {
+        			modificarT = new ModificarTitular();
+        			modificarT.setVisible(true);
 
                     // Agrega un WindowListener para manejar el evento de cierre
-        			modificarU.addWindowListener(new WindowAdapter() {
+        			modificarT.addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosing(WindowEvent e) {
-                        	modificarU = null;
+                        	modificarT = null;
                         }
                     });
 
                 } else {
-                	modificarU.requestFocus();
+                	modificarT.requestFocus();
                 }
             }
         		
@@ -129,12 +128,12 @@ public class InterfazOpcionesAvanzadas extends JFrame {
         	
         });
         
-        lblModificarUsuario.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        lblModificarUsuario.setHorizontalAlignment(SwingConstants.CENTER);
-        lblModificarUsuario.setForeground(Color.WHITE);
-        lblModificarUsuario.setFont(new Font("Tahoma", Font.PLAIN, 15));
-        lblModificarUsuario.setBounds(0, 0, 137, 37);
-        btnModificarUsu.add(lblModificarUsuario);
+        lblModificarTitular.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lblModificarTitular.setHorizontalAlignment(SwingConstants.CENTER);
+        lblModificarTitular.setForeground(Color.WHITE);
+        lblModificarTitular.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        lblModificarTitular.setBounds(0, 0, 137, 37);
+        btnModificarTit.add(lblModificarTitular);
         
         JPanel btnAtras = new JPanel();
         btnAtras.setBackground(new Color(69, 69, 69));
@@ -156,7 +155,10 @@ public class InterfazOpcionesAvanzadas extends JFrame {
         btnAtrasTxt.setForeground(new Color(255, 255, 255));
         btnAtrasTxt.setHorizontalAlignment(SwingConstants.CENTER);
         btnAtrasTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
-    }
+		
+	
+		
+			}
 	
 	 public void cerrarInterfaz() {
 	        dispose(); 
