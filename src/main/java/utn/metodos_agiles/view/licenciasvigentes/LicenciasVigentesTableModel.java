@@ -52,5 +52,15 @@ public class LicenciasVigentesTableModel extends AbstractTableModel {
     public Licencia getRow(int row) {
         return licencias.get(row);
     }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return false;
+    }
+
+    public Licencia getLicenciaAt(int row) {
+        if(row > (getRowCount() - 1)) return null;
+        return licencias.get(row);
+    }
 }
 

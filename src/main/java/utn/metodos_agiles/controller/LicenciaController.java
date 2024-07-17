@@ -74,20 +74,42 @@ public class LicenciaController {
         return null;
     }
 
-    public Licencia renovarLicencia(Licencia licencia) {
+    public Licencia renovarLicencia(Licencia licencia, String observacion) {
         Date fechaEmision = Date.valueOf(LocalDate.now());
-        Date vigencia = calcularVigencia(licencia.getTitular());
 
-        //todo
+        Titular titular = DBManager.getInstance().buscarPorDni(licencia.getTitular().getDni());
 
-        DBManager.getInstance().guardarLicencia(licencia);
-        LicenciaController.getInstance().imprimirLicencia(licencia);
-        LicenciaController.getInstance().imprimirFactura(licencia.getTitular(), licencia);
+        Licencia licenciaRenovada = Licencia.builder()
+                .titular(titular)
+                .nombreTitular(titular.getNombre())
+                .apellidoTitular(titular.getApellido())
+                .fechaNacTitular(titular.getFechaNacimiento())
+                .calleTitular(titular.getCalle())
+                .nroCasaTitular(titular.getNroCasa())
+                .clase(licencia.getClase())
+                .tipo(TipoLicencia.ORIGINAL)
+                .grupoSangTitular(titular.getGrupoSanguineo())
+                .rhTitular(titular.getRh())
+                .esDonanteTitular(titular.getEsDonante())
+                .observaciones(observacion)
+                .fechaEmision(fechaEmision)
+                .administrador("Juan Perez")
+                .vigente(true)
+                .fechaVencimiento(calcularVigencia(titular))
+                .build();
+
+        DBManager.getInstance().guardarLicencia(licenciaRenovada);
+        LicenciaController.getInstance().imprimirLicencia(licenciaRenovada);
+        LicenciaController.getInstance().imprimirFactura(licenciaRenovada.getTitular(), licenciaRenovada);
         return null;
     }
 
     public Titular obtenerTitular(int dni) {
         return DBManager.getInstance().buscarPorDni(dni);
+    }
+
+    public void actualizarTitular(Titular titular) {
+        DBManager.getInstance().actualizarTitular(titular);
     }
 
     public List<Licencia> licenciasDeTitular(int dni) {
@@ -109,9 +131,13 @@ public class LicenciaController {
 
         String filePath = "licencia" + titular.getDni() + ".pdf";
         String imagePath = "src/main/resources/fotos/" + titular.getDni() +".png";
+        Long number = DBManager.getInstance()
+                .IDLicencia(licencia.getTitular().getDni(), licencia.getClase());
+        String numberS = String.format("%09d", number);
 
         LicenciaDto l = LicenciaDto.builder()
-                .number(DBManager.getInstance().IDLicencia(licencia.getTitular().getDni(), licencia.getClase()))
+                .licencia(licencia.getClase().name())
+                .number(numberS)
                 .lastname(licencia.getTitular().getApellido())
                 .name(licencia.getTitular().getNombre())
                 .address(licencia.getCalleTitular() + " " + licencia.getNroCasaTitular())
@@ -165,7 +191,7 @@ public class LicenciaController {
     }
 
     private String dateToString(Date date) {
-        return date.getDay() + traductorMes(date.getMonth()) + date.getYear();
+        return date.getDay() + " " + traductorMes(date.getMonth()) + " " + ((1900+date.getYear())%100);
     }
 
     private static String traductorMes(int mes) {

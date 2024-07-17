@@ -10,15 +10,15 @@ import java.sql.Date;
 @Table(name="licencia")
 @Getter
 @Setter
-@Builder
+@Builder(toBuilder = true)
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Licencia {
 
 	@Id
-	@UuidGenerator
-	private String id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private Long id;
 
 	private String nombreTitular;
 

@@ -193,6 +193,7 @@ public class InterfazEmitirCopia extends JFrame {
                         LicenciaController.getInstance().copiarLicencia(licenciaSeleccionada);
 
                         // todo: fix mostrar mensaje
+                        buscarTitular();
         				abrirMensajeExitoso();
         			} else {
             			abrirAdvertencia();

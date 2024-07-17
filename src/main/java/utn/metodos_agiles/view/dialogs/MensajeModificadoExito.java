@@ -17,11 +17,9 @@ public class MensajeModificadoExito extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	 private InterfazModificarDatosUsuario interfazMDU;
+
 	 
-	 
-	public MensajeModificadoExito(InterfazModificarDatosUsuario interfazMDU) {
-		this.interfazMDU = interfazMDU;
+	public MensajeModificadoExito() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MensajeExitoso.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

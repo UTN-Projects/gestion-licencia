@@ -2,8 +2,8 @@ package utn.metodos_agiles.view.licenciasexpiradas;
 
 import utn.metodos_agiles.controller.LicenciaController;
 import utn.metodos_agiles.model.entidades.Licencia;
+import utn.metodos_agiles.view.InterfazRenovarLicencia;
 import utn.metodos_agiles.view.NumericAndLengthFilter;
-import utn.metodos_agiles.view.RenovarLicencia;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -13,7 +13,6 @@ import javax.swing.text.AbstractDocument;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -165,7 +164,9 @@ public class InterfazLicenciasExpiradas extends JFrame {
 
                 if(selectedRow != -1) {
                     Licencia licenciaSelected = ((LicenciasExpiradasTableModel) tablaDatos.getModel()).getLicenciaAt(selectedRow);
-                    RenovarLicencia renovarLicencia = new RenovarLicencia(licenciaSelected);
+                    InterfazRenovarLicencia renovarLicencia = new InterfazRenovarLicencia(licenciaSelected);
+                    renovarLicencia.setVisible(true);
+
                     //todo: show pantalla renovar
                     cerrarInterfaz();
                 }

@@ -6,9 +6,9 @@ import utn.metodos_agiles.model.entidades.Licencia;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
 
+import utn.metodos_agiles.view.InterfazRenovarLicencia;
 import utn.metodos_agiles.view.NumericAndLengthFilter;
 
 import java.awt.*;
@@ -171,25 +171,6 @@ public class InterfazLicenciasVigentes extends JFrame {
 		comboBoxGS.setModel(new DefaultComboBoxModel(new String[] {" ", "A", "B", "0"}));
 		comboBoxGS.setBounds(440, 12, 80, 22);
 		datosVigencia.add(comboBoxGS);
-        
-        
-        
-        
-        
-        /*JComboBox comboBoxRH = new JComboBox();
-        comboBoxRH.setModel(new DefaultComboBoxModel(new String[] {"", "+", "-"}));
-        comboBoxRH.setBounds(440, 55, 80, 22);
-        datosVigencia.add(comboBoxRH);
-        
-        JComboBox comboBoxDonante = new JComboBox();
-        comboBoxDonante.setModel(new DefaultComboBoxModel(new String[] {"", "SI", "NO"}));
-        comboBoxDonante.setBounds(440, 94, 80, 22);
-        datosVigencia.add(comboBoxDonante);
-        
-        JComboBox comboBoxGS = new JComboBox();
-        comboBoxGS.setModel(new DefaultComboBoxModel(new String[] {"", "A", "B", "AB", "O"}));
-        comboBoxGS.setBounds(440, 12, 80, 22);
-        datosVigencia.add(comboBoxGS);*/
 		
         JPanel resultadoBusqueda = new JPanel();
         resultadoBusqueda.setBackground(new Color(251, 203, 60));
@@ -206,28 +187,9 @@ public class InterfazLicenciasVigentes extends JFrame {
         
         tablaDatos = new JTable();
         tablaDatos.setFont(new Font("Tahoma", Font.PLAIN, 11));
-        DefaultTableModel tableModel = new DefaultTableModel(
-                new Object[][]{},
-                new String[] {
-                        "DNI", "NOMBRE", "APELLIDO","CLASE", "TIPO", "SANGRE", "DONANTE", "CADUCIDAD"
-                }
-        );
 
-        tablaDatos.setModel(new DefaultTableModel(
-        	new Object[][] {
-        		{null, null, null, null, null, null, null, null},
-        	},
-        	new String[] {
-        		"DNI", "NOMBRE", "APELLIDO", "CLASE", "GS", "RH", "DONANTE", "CADUCIDAD"
-        	}
-        ) {
-        	boolean[] columnEditables = new boolean[] {
-        		false, false, false, false, false, false, false, false
-        	};
-        	public boolean isCellEditable(int row, int column) {
-        		return columnEditables[column];
-        	}
-        });
+        tablaDatos.setModel(new LicenciasVigentesTableModel(List.of()));
+
         tablaDatos.getColumnModel().getColumn(0).setResizable(false);
         tablaDatos.getColumnModel().getColumn(1).setResizable(false);
         tablaDatos.getColumnModel().getColumn(2).setResizable(false);
@@ -241,7 +203,7 @@ public class InterfazLicenciasVigentes extends JFrame {
         
         JPanel btnCancelar = new JPanel();
         btnCancelar.setBackground(new Color(69, 69, 69));
-        btnCancelar.setBounds(478, 377, 96, 23);
+        btnCancelar.setBounds(373, 377, 96, 23);
         contentPane.add(btnCancelar);
         btnCancelar.setLayout(null);
         
@@ -253,8 +215,7 @@ public class InterfazLicenciasVigentes extends JFrame {
         	public void mouseClicked(MouseEvent e) {
         		limpiarCampos();
         		limpiarCampoDni();
-        		DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-                model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
+                tablaDatos.setModel(new LicenciasVigentesTableModel(List.of()));
         		cerrarInterfaz();
         	}
         });
@@ -293,15 +254,42 @@ public class InterfazLicenciasVigentes extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				limpiarCampos();
 				limpiarCampoDni();
-				DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
+				tablaDatos.setModel(new LicenciasVigentesTableModel(List.of()));
 		        
 		        
 				
 			}
 		});
-        
-        
+
+        JPanel btnRenovar = new JPanel();
+        btnRenovar.setBackground(new Color(69, 69, 69));
+        btnRenovar.setBounds(480, 377, 96, 23);
+        contentPane.add(btnRenovar);
+        btnRenovar.setLayout(null);
+
+        JLabel btnRenovarTxt = new JLabel("Renovar");
+        btnRenovarTxt.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                int selectedRow = tablaDatos.getSelectedRow();
+
+                if(selectedRow != -1) {
+                    Licencia licenciaSelected = ((LicenciasVigentesTableModel) tablaDatos.getModel()).getLicenciaAt(selectedRow);
+                    InterfazRenovarLicencia renovarLicencia = new InterfazRenovarLicencia(licenciaSelected);
+                    renovarLicencia.setVisible(true);
+
+                    //todo: show pantalla renovar
+                    cerrarInterfaz();
+                }
+            }
+        });
+        btnRenovarTxt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btnRenovarTxt.setForeground(new Color(255, 255, 255));
+        btnRenovarTxt.setHorizontalAlignment(SwingConstants.CENTER);
+        btnRenovarTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
+        btnRenovarTxt.setBounds(0, 0, 96, 23);
+        btnRenovar.add(btnRenovarTxt);
         
     }
 	
@@ -354,59 +342,17 @@ public class InterfazLicenciasVigentes extends JFrame {
 	            return matches;
 	        }).toList();
 
-	        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-	        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
-  
-	        filteredLicencias.forEach(licencia -> {
-	        	String esDonante = licencia.isEsDonanteTitular() ? "SI" : "NO";
-	            model.addRow(new Object[]{
-	                licencia.getTitular().getDni(),
-	                licencia.getNombreTitular(),
-	                licencia.getApellidoTitular(),
-	                licencia.getClase(),
-	                licencia.getGrupoSangTitular(),
-	                licencia.getRhTitular(),
-	                esDonante,
-	                //licencia.isEsDonanteTitular(),
-	                licencia.getFechaVencimiento()
-	            });
-	        });
 
-	        if (filteredLicencias.isEmpty()) {
-	            model.addRow(new Object[]{"No encontrado", "", ""});
-	        }
+            tablaDatos.setModel(new LicenciasVigentesTableModel(filteredLicencias));
+
+            if (filteredLicencias.isEmpty()) {
+                // todo: show no encontrado
+            }
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
 	}
-	/*private void buscarLicencias() {
-		 
-		Integer dni = txtDni.getText().isEmpty()? null : Integer.parseInt(txtDni.getText());
-        List<Licencia> licenciasFiltered = licencias.stream().filter(licencia -> dni == null || licencia.getTitular().getDni() == dni).toList();
-
-		    if (!licenciasFiltered.isEmpty()) {
-		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-		        model.setRowCount(0); // Limpiar la tabla antes de añadir nuevos datos
-
-                        licenciasFiltered.forEach(licencia -> model.addRow(new Object[]{
-                                licencia.getTitular().getDni(),
-                                licencia.getNombreTitular(),
-                                licencia.getApellidoTitular(),
-                                licencia.getClase(),
-                                licencia.getTipo(),
-                                licencia.getGrupoSangTitular().toString()+licencia.getRhTitular(),
-                                licencia.isEsDonanteTitular(),
-                                licencia.getFechaVencimiento()
-                        }));
-
-		    } else {
-		        // Mostrar mensaje de que no se encontró el titular
-		        DefaultTableModel model = (DefaultTableModel) tablaDatos.getModel();
-		        model.setRowCount(0); // Limpiar la tabla si no se encontró el titular
-		        model.addRow(new Object[]{"No encontrado", "", ""});
-		    }
-	}*/
 	
 	 public void cerrarInterfaz() {
 	        dispose(); 

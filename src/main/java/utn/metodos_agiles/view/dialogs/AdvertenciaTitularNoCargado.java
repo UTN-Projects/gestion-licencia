@@ -1,4 +1,7 @@
-package utn.metodos_agiles.view;
+package utn.metodos_agiles.view.dialogs;
+
+import utn.metodos_agiles.view.ModificarTitular;
+import utn.metodos_agiles.view.dialogs.AdvertenciaContribuyenteNoCargado;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

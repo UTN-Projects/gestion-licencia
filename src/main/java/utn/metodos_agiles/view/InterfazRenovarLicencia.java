@@ -1,41 +1,39 @@
 
 package utn.metodos_agiles.view;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import utn.metodos_agiles.controller.LicenciaController;
+import utn.metodos_agiles.db.DBManager;
+import utn.metodos_agiles.model.entidades.Licencia;
+import utn.metodos_agiles.model.entidades.Titular;
+import utn.metodos_agiles.view.dialogs.MensajeModificadoExito;
+import utn.metodos_agiles.view.licenciasvigentes.InterfazLicenciasVigentes;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.AbstractDocument;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import utn.metodos_agiles.controller.LicenciaController;
-import utn.metodos_agiles.db.DBManager;
-import utn.metodos_agiles.model.entidades.Titular;
-import utn.metodos_agiles.view.dialogs.MensajeModificadoExito;
-import utn.metodos_agiles.view.licenciasvigentes.InterfazLicenciasVigentes;
-
-public class InterfazModificarDatosTitular extends JFrame {
+public class InterfazRenovarLicencia extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtNombre;
 	private JTextField txtApellido;
 	private JTextField txtCalle;
+	private JTextField txtObservacion;
 	private JTextField textNro;
 	private JCheckBox textEsDonante;
 	private Titular titularActual;
-	
-	
-	public InterfazModificarDatosTitular(Titular titularMod) {
-		this.titularActual = titularMod;
+
+
+	public InterfazRenovarLicencia(Licencia licencia) {
+		this.titularActual = LicenciaController.getInstance().obtenerTitular(licencia.getTitular().getDni());
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazLicenciasVigentes.class.getResource("/imagenes/Escudo_Argentina.png")));
 		setResizable(false);
-		setTitle("Modificar usuario");
+		setTitle("Renovar Licencia");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(700, 300, 600, 450);
 		
@@ -47,20 +45,17 @@ public class InterfazModificarDatosTitular extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		
+
 		  
         JPanel datosDelTitular = new JPanel();
         datosDelTitular.setBackground(new Color(251, 203, 60));
-        datosDelTitular.setBounds(10, 103, 564, 177);
+        datosDelTitular.setBounds(10, 103, 564, 220);
         contentPane.add(datosDelTitular);
-        datosDelTitular.setBorder(new TitledBorder(new LineBorder(new Color(69, 69, 69), 2, true), "Datos del Titular", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(69, 69, 69)));
+        datosDelTitular.setBorder(new TitledBorder(new LineBorder(new Color(69, 69, 69), 2, true), "Datos de Licencia", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(69, 69, 69)));
         datosDelTitular.setLayout(null);
-       
-        
         
         JPanel datosVigencia = new JPanel();
-        datosVigencia.setBounds(10, 21, 544, 145);
+        datosVigencia.setBounds(10, 21, 544, 190);
         datosDelTitular.add(datosVigencia);
         datosVigencia.setBackground(new Color(251, 203, 60));
         datosVigencia.setLayout(null);
@@ -180,8 +175,29 @@ public class InterfazModificarDatosTitular extends JFrame {
 		separatorTxtEsDonante.setBackground(new Color(69, 69, 69));
 		separatorTxtEsDonante.setBounds(399, 118, 112, 13);
 		datosVigencia.add(separatorTxtEsDonante);
-        
-       
+
+
+        txtObservacion = new JTextField();
+        txtObservacion.setForeground(new Color(69, 69, 69));
+        txtObservacion.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        txtObservacion.setDisabledTextColor(Color.WHITE);
+        txtObservacion.setColumns(10);
+        txtObservacion.setBorder(null);
+        txtObservacion.setBackground(new Color(251, 203, 60));
+        txtObservacion.setBounds(125, 139, 112, 26);
+        datosVigencia.add(txtObservacion);
+
+        JSeparator separatorTxtObservacion = new JSeparator();
+        separatorTxtObservacion.setForeground(new Color(69, 69, 69));
+        separatorTxtObservacion.setBackground(new Color(69, 69, 69));
+        separatorTxtObservacion.setBounds(125, 166, 112, 13);
+        datosVigencia.add(separatorTxtObservacion);
+
+        JLabel observacionLabel = new JLabel("OBSERVACION:");
+        observacionLabel.setForeground(new Color(69, 69, 69));
+        observacionLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        observacionLabel.setBounds(20, 139, 100, 20);
+        datosVigencia.add(observacionLabel);
         
         
         JPanel btnAgregar = new JPanel();
@@ -190,7 +206,7 @@ public class InterfazModificarDatosTitular extends JFrame {
         contentPane.add(btnAgregar);
         btnAgregar.setLayout(null);
         
-        JLabel btnModificarTxt = new JLabel("Modificar");
+        JLabel btnModificarTxt = new JLabel("Renovar");
         btnModificarTxt.setBounds(0, 0, 96, 23);
         btnAgregar.add(btnModificarTxt);
         btnModificarTxt.addMouseListener(new MouseAdapter() {
@@ -198,6 +214,7 @@ public class InterfazModificarDatosTitular extends JFrame {
         	public void mouseClicked(MouseEvent e) {
         		
         		modificarDatosUsuario();
+                LicenciaController.getInstance().renovarLicencia(licencia, txtObservacion.getText());
         		
         		abrirMensajeModificadoExito();
         		cerrarInterfaz();

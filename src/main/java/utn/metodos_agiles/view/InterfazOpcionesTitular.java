@@ -1,5 +1,7 @@
 package utn.metodos_agiles.view;
 
+import utn.metodos_agiles.view.guardartitular.InterfazGuardarTitular;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;

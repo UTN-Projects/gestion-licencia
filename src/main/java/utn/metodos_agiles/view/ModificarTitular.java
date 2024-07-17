@@ -22,7 +22,9 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import utn.metodos_agiles.db.DBManager;
-import utn.metodos_agiles.entidades.Titular;
+import utn.metodos_agiles.model.entidades.Titular;
+import utn.metodos_agiles.view.dialogs.AdvertenciaTitularNoCargado;
+import utn.metodos_agiles.view.guardartitular.InterfazGuardarTitular;
 
 public class ModificarTitular extends JFrame {
 

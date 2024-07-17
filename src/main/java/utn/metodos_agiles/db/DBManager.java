@@ -110,8 +110,8 @@ public class DBManager {
 				.getResultList();
 	}
 
-	public String IDLicencia(int dniTitular, ClaseLicencia clase) {
-		return (String) entityManager.createQuery("SELECT licencia.id FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND clase = ?2 AND vigente = true")
+	public Long IDLicencia(int dniTitular, ClaseLicencia clase) {
+		return (Long) entityManager.createQuery("SELECT licencia.id FROM Licencia licencia WHERE licencia.titular.dni = ?1 AND clase = ?2 AND vigente = true")
 				.setParameter(1, dniTitular)
 				.setParameter(2, clase)
 				.getSingleResult();
@@ -204,26 +204,26 @@ public class DBManager {
 
 	}
 
-    public void actualizarTitular(Titular titularActual, Titular titularViejo) {
+    public void actualizarTitular(Titular titular) {
 
         try {
                entityManager.getTransaction().begin();
 
                // Buscar el usuario por nombre de usuario (o cualquier otro criterio que uses)
-               Titular titularEnBD = entityManager.find(Titular.class, titularViejo.getDni());
+               Titular titularEnBD = entityManager.find(Titular.class, titular.getDni());
 
                // Actualizar los campos del usuario recuperado con los nuevos valores de usuarioActual
-               titularEnBD.setNombre(titularActual.getNombre());
-               titularEnBD.setApellido(titularActual.getApellido());
-               titularEnBD.setCalle(titularActual.getCalle());
-               titularEnBD.setNroCasa(titularActual.getNroCasa());
-               titularEnBD.setEsDonante(titularActual.getEsDonante());
+               titularEnBD.setNombre(titular.getNombre());
+               titularEnBD.setApellido(titular.getApellido());
+               titularEnBD.setCalle(titular.getCalle());
+               titularEnBD.setNroCasa(titular.getNroCasa());
+               titularEnBD.setEsDonante(titular.getEsDonante());
 
 
                entityManager.getTransaction().commit();
            } catch (Exception e) {
                entityManager.getTransaction().rollback();
-               throw new RuntimeException("Error al actualizar usuario", e);
+               throw new RuntimeException("Error al actualizar titular", e);
            }
 
    }

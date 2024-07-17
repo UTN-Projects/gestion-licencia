@@ -77,7 +77,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
         txtCorreo.setBounds(190, 0, 147, 26);
         datosVigencia.add(txtCorreo);
         txtCorreo.setColumns(10);
-        txtCorreo.setText(usuarioMod.getCorreoElectronico());
+        txtCorreo.setText(usuarioActual.getCorreoElectronico());
         
         JLabel correoLbl = new JLabel("CORREO ELECTRONICO:");
         correoLbl.setForeground(new Color(69, 69, 69));
@@ -100,7 +100,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
         txtNombre.setBackground(new Color(251, 203, 60));
         txtNombre.setBounds(94, 43, 112, 26);
         datosVigencia.add(txtNombre);
-        txtNombre.setText(usuarioMod.getNombre());
+        txtNombre.setText(usuarioActual.getNombre());
         
         JSeparator separatorTxtNombre = new JSeparator();
         separatorTxtNombre.setForeground(new Color(69, 69, 69));
@@ -129,7 +129,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
         txtApellido.setBackground(new Color(251, 203, 60));
         txtApellido.setBounds(94, 91, 112, 26);
         datosVigencia.add(txtApellido);
-        txtApellido.setText(usuarioMod.getApellido());
+        txtApellido.setText(usuarioActual.getApellido());
         
         JLabel apellidoLabel = new JLabel("APELLIDO:");
         apellidoLabel.setForeground(new Color(69, 69, 69));
@@ -160,7 +160,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
 		textTel.setBackground(new Color(251, 203, 60));
 		textTel.setBounds(399, 43, 112, 26);
 		datosVigencia.add(textTel);
-        textTel.setText(usuarioMod.getTelefono());
+        textTel.setText(usuarioActual.getTelefono());
 		
 		JSeparator separatorTxtTel = new JSeparator();
 		separatorTxtTel.setForeground(new Color(69, 69, 69));
@@ -276,7 +276,7 @@ public class InterfazModificarDatosUsuario extends JFrame {
     }
        
 	public void abrirMensajeModificadoExito() {
-		MensajeModificadoExito mensajeModEx = new MensajeModificadoExito(this);
+		MensajeModificadoExito mensajeModEx = new MensajeModificadoExito();
 		mensajeModEx.setVisible(true);
 		setVisible(false); 
 	}
