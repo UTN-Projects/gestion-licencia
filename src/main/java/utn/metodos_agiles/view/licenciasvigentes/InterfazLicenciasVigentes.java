@@ -279,7 +279,6 @@ public class InterfazLicenciasVigentes extends JFrame {
                     InterfazRenovarLicencia renovarLicencia = new InterfazRenovarLicencia(licenciaSelected);
                     renovarLicencia.setVisible(true);
 
-                    //todo: show pantalla renovar
                     cerrarInterfaz();
                 }
             }
